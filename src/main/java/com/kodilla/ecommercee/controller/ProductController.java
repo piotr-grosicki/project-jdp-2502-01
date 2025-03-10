@@ -39,20 +39,23 @@ public class ProductController {
 
     }
 
-    @PutMapping(value = "/{productId}")
-    public ResponseEntity<ProductDto> updateProductName() {
+    @PutMapping(value = "/{productId}/name")
+    public ResponseEntity<ProductDto> updateProductName(@PathVariable Long productId
+    ) {
         ProductDto productUpdatedName = new ProductDto(1L, "Test product updated", "Test description", 10.00);
         return ResponseEntity.ok(productUpdatedName);
     }
 
-    @PutMapping(value = "/{productId}")
-    public ResponseEntity<ProductDto> updateProductDescription() {
+    @PutMapping(value = "/{productId}/description")
+    public ResponseEntity<ProductDto> updateProductDescription(@PathVariable Long productId
+    ) {
         ProductDto productUpdatedDescription = new ProductDto(1L, "Test product", "Test description updated", 10.00);
         return ResponseEntity.ok(productUpdatedDescription);
     }
 
-    @PutMapping(value = "/{productId}")
-    public ResponseEntity<ProductDto> updateProductPrice() {
+    @PutMapping(value = "/{productId}/price")
+    public ResponseEntity<ProductDto> updateProductPrice(@PathVariable Long productId
+    ) {
         ProductDto productUpdatedPrice = new ProductDto(1L, "Test product", "Test description", 12.50);
         return ResponseEntity.ok(productUpdatedPrice);
 
