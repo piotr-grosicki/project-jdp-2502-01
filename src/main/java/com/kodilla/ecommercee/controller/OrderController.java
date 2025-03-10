@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/ecommercee")
+@RequestMapping("/ecommercee/orders")
 public class OrderController {
 
     @GetMapping
@@ -18,12 +18,12 @@ public class OrderController {
     }
 
     @GetMapping(value = "{id}")
-    public OrderDto getOrder(@PathVariable Long id) {
-        return new OrderDto(1L, 2, 500.20);
+    public OrderDto getOrder(@PathVariable int id) {
+        return new OrderDto(1, LocalDate.now(), 2, 500.20);
     }
 
-    @DeleteMapping()
-    public void deleteOrder(Long orderId) {
+    @DeleteMapping(value = "{id}")
+    public void deleteOrder(@PathVariable int id) {
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -32,7 +32,7 @@ public class OrderController {
 
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public OrderDto updateOrder(@RequestBody OrderDto orderDto) {
-        return new OrderDto(5, 3, 600);
+        return new OrderDto(5, LocalDate.now(),3, 600);
     }
 
 }

@@ -1,29 +1,17 @@
 package com.kodilla.ecommercee.domain;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
 import java.time.LocalDate;
 
+@Getter
+@AllArgsConstructor
 public class OrderDto {
 
-    private long id;
+    private int id;
     private LocalDate orderDate;
     private int userId;
     private double totalPrice;
 
-    public OrderDto(long id, int userId, double totalPrice) {
-        this.id = id;
-        this.userId = userId;
-        this.totalPrice = totalPrice;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public int getUserId() {
-        return userId;
-    }
-
-    public double getTotalPrice() {
-        return totalPrice;
-    }
 }
