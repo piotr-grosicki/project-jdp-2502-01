@@ -31,7 +31,7 @@ public class ProductController {
 
     @PostMapping
     public void addProduct() {
-
+        ProductDto productAdded = new ProductDto(6L, "New test product added", "New test description added", 3.99);
     }
 
     @DeleteMapping(value = "/{productId}")
@@ -40,22 +40,19 @@ public class ProductController {
     }
 
     @PutMapping(value = "/{productId}/name")
-    public ResponseEntity<ProductDto> updateProductName(@PathVariable Long productId
-    ) {
+    public ResponseEntity<ProductDto> updateProductName(@RequestBody ProductDto productDto) {
         ProductDto productUpdatedName = new ProductDto(1L, "Test product updated", "Test description", 10.00);
         return ResponseEntity.ok(productUpdatedName);
     }
 
     @PutMapping(value = "/{productId}/description")
-    public ResponseEntity<ProductDto> updateProductDescription(@PathVariable Long productId
-    ) {
+    public ResponseEntity<ProductDto> updateProductDescription(@RequestBody ProductDto productDto) {
         ProductDto productUpdatedDescription = new ProductDto(1L, "Test product", "Test description updated", 10.00);
         return ResponseEntity.ok(productUpdatedDescription);
     }
 
     @PutMapping(value = "/{productId}/price")
-    public ResponseEntity<ProductDto> updateProductPrice(@PathVariable Long productId
-    ) {
+    public ResponseEntity<ProductDto> updateProductPrice(@RequestBody ProductDto productDto) {
         ProductDto productUpdatedPrice = new ProductDto(1L, "Test product", "Test description", 12.50);
         return ResponseEntity.ok(productUpdatedPrice);
 
