@@ -12,11 +12,11 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UserDto> createUser(@PathVariable UserDto userDto) {
+    public ResponseEntity<UserDto> createUser(@RequestBody UserDto userDto) {
         return ResponseEntity.ok(userDto);
     }
 
-    @GetMapping(value = "{userId}")
+    @GetMapping(value = "/{userId}")
     public ResponseEntity<UserDto> getUser(@PathVariable Long userId) {
         return ResponseEntity.ok(new UserDto());
     }
@@ -26,7 +26,7 @@ public class UserController {
         return ResponseEntity.ok(userDto);
     }
 
-    @DeleteMapping(value = "{userId}")
+    @DeleteMapping(value = "/{userId}")
     public ResponseEntity<UserDto> deleteUser(@PathVariable Long userId) {
         return ResponseEntity.ok(new UserDto());
     }
