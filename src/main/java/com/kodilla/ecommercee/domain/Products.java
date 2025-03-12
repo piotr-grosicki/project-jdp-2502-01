@@ -1,9 +1,11 @@
 package com.kodilla.ecommercee.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,17 +14,15 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity(name = "PRODUCTS")
+@Setter
 public class Products {
 
-    private int id;
-    private List<Cart> carts = new ArrayList<>();
+
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "PRODUCT_ID")
-    public int getId() {
-        return id;
-    }
+    private int id;
 
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
@@ -30,19 +30,14 @@ public class Products {
             joinColumns = {@JoinColumn(name = "PRODUCT_ID", referencedColumnName = "PRODUCT_ID")},
             inverseJoinColumns = {@JoinColumn(name = "CART_ID", referencedColumnName = "CART_ID")}
     )
-    public List<Cart> getCarts() {
-        return carts;
-    }
+    private List<Cart> carts = new ArrayList<>();
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public void setCarts(List<Cart> carts) {
-        this.carts = carts;
-    }
-
-    @ManyToOne
-    @JoinColumn(name = "group_id")
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "group_id", referencedColumnName = "group_id")
+    @JsonIgnore
     private Group group;
 }
+
+
+
+
