@@ -41,4 +41,8 @@ public class Products {
     public void setCarts(List<Cart> carts) {
         this.carts = carts;
     }
+
+    @ManyToOne
+    @JoinColumn(name = "group_id")
+    private Group group;
 }
