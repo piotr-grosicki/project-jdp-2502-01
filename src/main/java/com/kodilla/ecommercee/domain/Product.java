@@ -4,25 +4,24 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity(name = "PRODUCTS")
-public class Products {
-
-    private int id;
-    private List<Cart> carts = new ArrayList<>();
-
+public class Product {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "PRODUCT_ID")
-    public int getId() {
-        return id;
-    }
+    private Long id;
+
+    @Column(name = "PRODUCT_NAME")
+    private String productName;
 
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
@@ -30,15 +29,6 @@ public class Products {
             joinColumns = {@JoinColumn(name = "PRODUCT_ID", referencedColumnName = "PRODUCT_ID")},
             inverseJoinColumns = {@JoinColumn(name = "CART_ID", referencedColumnName = "CART_ID")}
     )
-    public List<Cart> getCarts() {
-        return carts;
-    }
+    private List<Cart> carts;
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public void setCarts(List<Cart> carts) {
-        this.carts = carts;
-    }
 }
