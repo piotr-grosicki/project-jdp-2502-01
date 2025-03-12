@@ -7,11 +7,11 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "PRODUCTS")
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
 public class Product {
 
     @Id
