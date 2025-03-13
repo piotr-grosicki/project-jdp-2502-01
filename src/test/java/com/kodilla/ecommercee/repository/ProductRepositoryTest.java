@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,11 +36,15 @@ class ProductRepositoryTest {
     @BeforeEach
     void setUp() {
         product1 = new Product();
-        product1.setProductName("Apple");
+        product1.setName("Apple");
+        product1.setDescription("Fresh apple");
+        product1.setPrice(new BigDecimal("1.99"));
         product1 = productRepository.save(product1);
 
         product2 = new Product();
-        product2.setProductName("Banana");
+        product2.setName("Banana");
+        product2.setDescription("Fresh banana");
+        product2.setPrice(new BigDecimal("2.99"));
         product2 = productRepository.save(product2);
     }
 
@@ -67,31 +72,35 @@ class ProductRepositoryTest {
 
         // THEN
         assertTrue(result.isPresent(), "Product should be found in the database");
-        assertEquals("Apple", result.get().getProductName());
+        assertEquals("Apple", result.get().getName());
     }
 
     @Test
     void shouldCreateProduct() {
 //        GIVEN
         product3 = new Product();
-        product3.setProductName("Orange");
+        product3.setName("Orange");
+        product3.setDescription("Fresh orange");
+        product3.setPrice(new BigDecimal("3.99"));
 //        WHEN
         Product result = productRepository.save(product3);
 //        THEN
         assertNotNull(result);
-        assertEquals("Orange", result.getProductName());
+        assertEquals("Orange", result.getName());
     }
 
     @Test
     void shouldUpdateCreateProduct() {
 //        GIVEN
         Product newProduct = new Product();
-        newProduct.setProductName("Pineapple");
+        newProduct.setName("Pineapple");
+        newProduct.setDescription("Fresh pineapple");
+        newProduct.setPrice(new BigDecimal("4.99"));
 //        WHEN
         Product result = productRepository.save(newProduct);
 //        THEN
         assertNotNull(result);
-        assertEquals("Pineapple", result.getProductName());
+        assertEquals("Pineapple", result.getName());
         assertEquals(3, productRepository.findAll().size());
     }
 
