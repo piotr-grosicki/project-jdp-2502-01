@@ -11,7 +11,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity(name = "CART")
+@Entity(name = "CARTS")
 public class Cart {
 
     private int id;
@@ -31,7 +31,7 @@ public class Cart {
         return users;
     }
 
-    @ManyToMany(cascade = CascadeType.ALL, mappedBy = "carts")
+    @ManyToMany(cascade = CascadeType.ALL)
     public List<Product> getProducts() {
         return products;
     }

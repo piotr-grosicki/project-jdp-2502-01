@@ -2,33 +2,34 @@ package com.kodilla.ecommercee.domain;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-import java.util.ArrayList;
-import java.util.List;
 
-@Getter
-@Setter
+import java.math.BigDecimal;
+
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity(name = "PRODUCTS")
+@Entity
+@Table(name = "PRODUCTS")
 public class Product {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "PRODUCT_ID")
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
 
-    @Column(name = "PRODUCT_NAME")
-    private String productName;
+    @Column(name = "NAME", nullable = false)
+    private String name;
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(
-            name = "JOIN_CART_PRODUCT",
-            joinColumns = {@JoinColumn(name = "PRODUCT_ID", referencedColumnName = "PRODUCT_ID")},
-            inverseJoinColumns = {@JoinColumn(name = "CART_ID", referencedColumnName = "CART_ID")}
-    )
-    private List<Cart> carts;
+    @Column(name = "DESCRIPTION", nullable = false)
+    private String description;
 
+    @Column(name = "PRICE", nullable = false)
+    private BigDecimal price;
+
+//    !!! Do czasu dodania encji Group relacja musi być zakomentowana żeby projekt się budował. !!!
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "GROUP_ID", nullable = false)
+//    private Group group;
 }
