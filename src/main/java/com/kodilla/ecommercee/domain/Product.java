@@ -17,19 +17,18 @@ public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
-    @Column(name = "NAME", nullable = false)
+    @Column(name = "NAME")
     private String name;
 
-    @Column(name = "DESCRIPTION", nullable = false)
+    @Column(name = "DESCRIPTION")
     private String description;
 
-    @Column(name = "PRICE", nullable = false)
+    @Column(name = "PRICE")
     private BigDecimal price;
 
-//    !!! Do czasu dodania encji Group relacja musi być zakomentowana żeby projekt się budował. !!!
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "GROUP_ID", nullable = false)
+    @JoinColumn(name = "group_id", nullable = false)
     private Group group;
 }
