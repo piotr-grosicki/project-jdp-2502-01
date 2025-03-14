@@ -16,7 +16,7 @@ public class Cart {
 
     private int id;
     private Users users;
-    private List<Products> products = new ArrayList<>();
+    private List<Product> products = new ArrayList<>();
 
     @Id
     @GeneratedValue
@@ -32,7 +32,7 @@ public class Cart {
     }
 
     @ManyToMany(cascade = CascadeType.ALL, mappedBy = "carts")
-    public List<Products> getProducts() {
+    public List<Product> getProducts() {
         return products;
     }
 
@@ -44,7 +44,7 @@ public class Cart {
         this.users = users;
     }
 
-    public void setProducts(List<Products> products) {
+    public void setProducts(List<Product> products) {
         this.products = products;
     }
 }

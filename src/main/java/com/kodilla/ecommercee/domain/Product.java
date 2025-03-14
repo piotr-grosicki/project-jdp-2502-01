@@ -2,25 +2,30 @@ package com.kodilla.ecommercee.domain;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-@Getter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity(name = "PRODUCTS")
-public class Products {
+public class Product {
 
-    private int id;
+    private Long id;
     private List<Cart> carts = new ArrayList<>();
+    private String name;
+    private String description;
+    private BigDecimal price;
 
     @Id
     @GeneratedValue
     @Column(name = "PRODUCT_ID")
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
@@ -34,11 +39,19 @@ public class Products {
         return carts;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    @Column(name = "NAME")
+    public String getName() {
+        return name;
     }
 
-    public void setCarts(List<Cart> carts) {
-        this.carts = carts;
+    @Column(name = "DESCRIPTION")
+    public String getDescription() {
+        return description;
     }
+
+    @Column(name = "PRICE")
+    public BigDecimal getPrice() {
+        return price;
+    }
+
 }
