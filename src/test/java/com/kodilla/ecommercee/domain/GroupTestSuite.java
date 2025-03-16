@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.dao.DataIntegrityViolationException;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -128,7 +129,7 @@ public class GroupTestSuite {
             // Sprawdzam czy produkty zostały przypisane do grupy
             Group retrievedGroup = foundGroup.get();
             System.out.println("Group ID: " + retrievedGroup.getId());
-            System.out.println("Products in group: " + retrievedGroup.getProducts());// Debugowanie
+            System.out.println("Products in group: " + retrievedGroup.getProducts());
             System.out.println("Retrieved Products: " + retrievedGroup.getProducts().size());
             retrievedGroup.getProducts().forEach(p -> System.out.println("Product: " + p.getName()));
 
@@ -138,5 +139,30 @@ public class GroupTestSuite {
         Assertions.assertFalse(retrievedGroup.getProducts().isEmpty());
         Assertions.assertEquals(2, retrievedGroup.getProducts().size());
 
+    }
+
+    @Test
+    public void deleteGroupWithProductTest() {
+        //Given
+        Group group = new Group(1L , "Electronics", new ArrayList<>());
+        Group savedGroup = groupRepository.save(group);
+
+        Product product1 = new Product(1L, "LED TV", "Very big LED TV", new BigDecimal("6999"), group);
+        Product product2 = new Product(2L, "Soundbar", "Very laud soundbar", new BigDecimal("3999"), group);
+        productRepository.save(product1);
+        productRepository.save(product2);
+
+            // Sprawdzam czy produkty zostały przypisane do grupy
+            Optional<Group> foundGroup = groupRepository.findById(savedGroup.getId());
+            Group retrievedGroup = foundGroup.get();
+            System.out.println("Group ID: " + retrievedGroup.getId());
+            System.out.println("Products in group: " + retrievedGroup.getProducts());
+            System.out.println("Retrieved Products: " + retrievedGroup.getProducts().size());
+            retrievedGroup.getProducts().forEach(p -> System.out.println("Product: " + p.getName()));
+
+        //When & Then
+        Exception exception = Assertions.assertThrows(DataIntegrityViolationException.class, () -> {groupRepository.delete(savedGroup);});
+        System.out.println(exception.getMessage());
+        Assertions.assertTrue(foundGroup.isPresent());
     }
 }
