@@ -1,43 +1,53 @@
 package com.kodilla.ecommercee.controller;
 
+import com.kodilla.ecommercee.domain.Group;
 import com.kodilla.ecommercee.domain.GroupDto;
+import com.kodilla.ecommercee.service.DbService;
+import com.kodilla.ecommercee.service.GroupMapper;
 import lombok.AllArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
+import java.util.Map;
+import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/groups")
 @AllArgsConstructor
 public class GroupController {
 
+    private final DbService dbService;
+    private final GroupMapper groupMapper;
 
     @GetMapping
     public ResponseEntity<List<GroupDto>> getAllGroups() {
-        List<GroupDto> groups = List.of(
-                new GroupDto(1L, "Electronics", List.of()),
-                new GroupDto(2L, "Books",List.of(1L, 2L)),
-                new GroupDto(3L, "Clothing",List.of())
-        );
-        return ResponseEntity.ok(groups);
-    }
-
-    @PostMapping
-    public ResponseEntity<GroupDto> addGroup(@RequestBody GroupDto groupDto) {
-        GroupDto createdGroup = new GroupDto(4L, "Alkohol",List.of());
-        return ResponseEntity.ok(createdGroup);
+        List<Group> groups = dbService.getAllGroups();
+        List<GroupDto> groupDtos = groups.stream()
+                .map(groupMapper::mapToGroupDto)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(groupDtos);
     }
 
     @GetMapping("/{groupId}")
-    public ResponseEntity<GroupDto> getGroupById(@PathVariable Long groupId)  {
-        GroupDto group = new GroupDto(groupId, "Example Group " + groupId, List.of());
-        return ResponseEntity.ok(group);
+    public ResponseEntity<GroupDto> getGroupById(@PathVariable Long groupId) throws GroupNotFoundException {
+        Group group = dbService.findGroup(groupId);
+        GroupDto groupDto = groupMapper.mapToGroupDto(group);
+        return ResponseEntity.ok(groupDto);
+    }
+
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<GroupDto> createGroup(@RequestBody GroupDto request) {
+        Group group = groupMapper.mapToGroup(request);
+        Group savedGroup = dbService.saveGroup(group);
+        return ResponseEntity.ok(groupMapper.mapToGroupDto(savedGroup));
     }
 
     @PutMapping("/{groupId}")
-    public ResponseEntity<GroupDto> updateGroupName(@PathVariable Long groupId, @RequestBody String newName)  {
-        GroupDto updatedGroup = new GroupDto(groupId, newName, List.of());
-        return ResponseEntity.ok(updatedGroup);
+    public ResponseEntity<GroupDto> updateGroupName(@PathVariable Long groupId, @RequestBody String newName) throws GroupNotFoundException {
+        Group group = dbService.findGroup(groupId);
+        group.setName(newName);
+        Group savedGroup = dbService.saveGroup(group);
+        return ResponseEntity.ok(groupMapper.mapToGroupDto(savedGroup));
     }
 }

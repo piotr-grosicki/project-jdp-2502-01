@@ -4,25 +4,29 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "PRODUCT_GROUPS")
-@Getter
-@Setter
-@NoArgsConstructor
+@Table(name = "product_groups")
+@Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class Group {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "GRUOP_ID", unique = true)
+    @Column(name = "group_id")
     private Long id;
 
-    @Column(name = "GRUOP_NAME", nullable = false, length = 100)
+    @Column(name = "group_name")
     private String name;
 
-    @OneToMany(mappedBy = "group", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonIgnore
-    private List<Product> products;
+    @OneToMany(
+            targetEntity = Product.class,
+            mappedBy = "group",
+            cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY
+    )
+    private List<Product> products = new ArrayList<>();
 }

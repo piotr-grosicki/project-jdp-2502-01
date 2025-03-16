@@ -29,6 +29,6 @@ public class Product {
 
 //    !!! Do czasu dodania encji Group relacja musi być zakomentowana żeby projekt się budował. !!!
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "GROUP_ID", nullable = false)
+    @JoinColumn(name = "group_id", nullable = false)
     private Group group;
 }
