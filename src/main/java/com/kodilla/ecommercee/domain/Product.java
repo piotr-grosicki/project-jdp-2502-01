@@ -1,16 +1,14 @@
 package com.kodilla.ecommercee.domain;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity(name = "PRODUCTS")
@@ -21,6 +19,7 @@ public class Product {
     private String name;
     private String description;
     private BigDecimal price;
+    private Integer groupId;
 
     @Id
     @GeneratedValue
@@ -54,4 +53,8 @@ public class Product {
         return price;
     }
 
+    @Column(name = "GROUP_ID")
+    public Integer getGroupId() {
+        return groupId;
+    }
 }

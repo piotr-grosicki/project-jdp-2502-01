@@ -23,12 +23,18 @@ public class ProductController {
     @GetMapping
     public ResponseEntity<List<ProductDto>> getAllProducts() {
         List<Product> products = service.getAllProducts();
+        if (products == null) {
+            return ResponseEntity.ok(List.of());
+        }
         return ResponseEntity.ok(mapper.mapToProductDtoList(products));
     }
 
-    @GetMapping("/{productId}")
-    public ResponseEntity<ProductDto> getProductById(@PathVariable Long id) {
-        Product product = service.getProductById(id);
+    @GetMapping(value = "{productId}")
+    public ResponseEntity<ProductDto> getProductById(@PathVariable Long productId) {
+        Product product = service.getProductById(productId);
+        if (product == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
         return ResponseEntity.ok(mapper.mapToProductDto(product));
     }
 
@@ -39,29 +45,26 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.CREATED).body(mapper.mapToProductDto(addedProduct));
     }
 
-    @DeleteMapping(value = "/{productId}")
-    public void deleteProduct(@PathVariable Long productId) {
+    @DeleteMapping(value = "{productId}")
+    public ResponseEntity<Void> deleteProduct(@PathVariable Long productId) {
+        Product product = service.getProductById(productId);
+        if (product == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
         service.removeProduct(productId);
+        return ResponseEntity.noContent().build();
     }
 
-    @PutMapping(value = "/{productId}/name")
-    public ResponseEntity<ProductDto> updateProductName(@RequestBody ProductDto productDto) {
-        Product product = mapper.mapToProduct(productDto);
-        product.setName(productDto.getName());
-        return ResponseEntity.ok(mapper.mapToProductDto(product));
+    @PutMapping(value = "{productId}")
+    public ResponseEntity<ProductDto> updateProduct(@PathVariable Long productId, @RequestBody ProductDto productDto) {
+        Product existingProduct = service.getProductById(productId);
+        if (existingProduct == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        Product updatedProduct = mapper.mapToProduct(productDto);
+        updatedProduct.setId(productId);
+        Product savedProduct = service.updateProduct(updatedProduct);
+        return ResponseEntity.ok(mapper.mapToProductDto(savedProduct));
     }
 
-    @PutMapping(value = "/{productId}/description")
-    public ResponseEntity<ProductDto> updateProductDescription(@RequestBody ProductDto productDto) {
-        Product product = mapper.mapToProduct(productDto);
-        product.setDescription(productDto.getDescription());
-        return ResponseEntity.ok(mapper.mapToProductDto(product));
-    }
-
-    @PutMapping(value = "/{productId}/price")
-    public ResponseEntity<ProductDto> updateProductPrice(@RequestBody ProductDto productDto) {
-        Product product = mapper.mapToProduct(productDto);
-        product.setPrice(productDto.getPrice());
-        return ResponseEntity.ok(mapper.mapToProductDto(product));
-    }
 }

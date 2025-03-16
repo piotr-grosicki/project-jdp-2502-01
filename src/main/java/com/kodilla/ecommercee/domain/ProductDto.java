@@ -12,7 +12,6 @@ import java.util.List;
 @NoArgsConstructor
 public class ProductDto {
     private Long id;
-    private List<Cart> carts;
     private String name;
     private String description;
     private BigDecimal price;

@@ -12,17 +12,17 @@ public class ProductMapper {
     public Product mapToProduct(final ProductDto productDto) {
         return new Product(
                 productDto.getId(),
-                productDto.getCarts(),
+                null,
                 productDto.getName(),
                 productDto.getDescription(),
-                productDto.getPrice()
+                productDto.getPrice(),
+                null
                 );
     }
 
     public ProductDto mapToProductDto(final Product product) {
         return new ProductDto(
                 product.getId(),
-                product.getCarts(),
                 product.getName(),
                 product.getDescription(),
                 product.getPrice()

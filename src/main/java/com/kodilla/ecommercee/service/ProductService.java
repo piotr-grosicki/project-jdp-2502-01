@@ -26,7 +26,13 @@ public class ProductService {
     }
 
     public void removeProduct(Long id) {
-        repository.deleteById(id);
+        if (id != null) {
+            repository.deleteById(id);
+        }
+    }
+
+    public Product updateProduct(Product product) {
+        return repository.save(product);
     }
 
 }
