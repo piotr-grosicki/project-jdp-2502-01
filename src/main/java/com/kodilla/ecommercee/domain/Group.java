@@ -1,6 +1,5 @@
 package com.kodilla.ecommercee.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
