@@ -1,28 +1,20 @@
 package com.kodilla.ecommercee.repository;
 
-import com.kodilla.ecommercee.domain.Cart;
 import com.kodilla.ecommercee.domain.Group;
 import com.kodilla.ecommercee.domain.Product;
 import jakarta.transaction.Transactional;
-import org.assertj.core.api.AbstractIterableAssert;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.test.annotation.Rollback;
-
+import org.springframework.boot.test.context.SpringBootTest;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 
-
-@DataJpaTest
+@SpringBootTest
 class ProductRepositoryTest {
 
     @Autowired
@@ -77,13 +69,17 @@ class ProductRepositoryTest {
 
     @Test
     void shouldGetProductById() {
+//        GIVEN
+//        WHEN
         Optional<Product> result = productRepository.findById(product1.getId());
+//        THEN
         assertTrue(result.isPresent(), "Product should be found in the database");
         assertEquals("Apple", result.get().getName());
     }
 
     @Test
     void shouldCreateProduct() {
+//        GIVEN
         product3 = new Product();
         product3.setName("Orange");
         product3.setDescription("Fresh orange");
@@ -91,12 +87,12 @@ class ProductRepositoryTest {
         product3.setGroup(group);
         Long groupId = group.getId();
 
-
+//      WHEN
         Product result = productRepository.save(product3);
         group.getProducts().add(product3);
         Long productsInGroup = groupRepository.findById(groupId).get().getProducts().stream().count();
         groupRepository.save(group);
-
+//      THEN
         assertNotNull(result);
         assertEquals("Orange", result.getName());
         assertEquals(3, productRepository.findAll().size());
@@ -105,24 +101,21 @@ class ProductRepositoryTest {
 
     @Test
     void shouldUpdateProduct() {
+//        GIVEN
+//        WHEN
         product1.setName("Green Apple");
         productRepository.save(product1);
         Optional<Product> updatedProduct = productRepository.findById(product1.getId());
+//        THEN
         assertTrue(updatedProduct.isPresent());
         assertEquals("Green Apple", updatedProduct.get().getName());
     }
 
     @Test
-    @Transactional
-    @Rollback(false)
+
     void shouldDeleteProduct() {
         // GIVEN
         productRepository.deleteById(product1.getId());
-
-        // Usunięcie produktu z listy w grupie
-        group.removeProduct(product1);
-        groupRepository.save(group);
-
         // WHEN
         Group savedGroup = groupRepository.findByIdWithProducts(group.getId())
                 .orElseThrow(() -> new RuntimeException("Grupa nie została znaleziona"));
@@ -135,10 +128,11 @@ class ProductRepositoryTest {
     @Test
     @Transactional
     public void isTestProductsInGroup() {
-
+//      GIVEN
+//        WHEN
         Group savedGroup = groupRepository.findByIdWithProducts(group.getId())
                 .orElseThrow(() -> new RuntimeException("Grupa nie została znaleziona"));
-
+//      THEN
         assertNotNull(savedGroup.getProducts(), "Lista produktów nie powinna być null!");
         assertEquals(2, savedGroup.getProducts().size(), "Lista produktów powinna zawierać 2 elementy.");
     }

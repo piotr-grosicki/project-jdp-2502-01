@@ -17,7 +17,7 @@ public class Group {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "GRUOP_ID", unique = true)
+    @Column(name = "group_id", unique = true)
     private Long id;
 
     @Column(name = "GRUOP_NAME", nullable = false, length = 100)
@@ -25,13 +25,5 @@ public class Group {
 
     @OneToMany(targetEntity = Product.class, mappedBy = "group", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @JsonIgnore
-    private List<Product> products = new ArrayList<>();
-
-    public void removeProduct(Product product) {
-        if (products != null) {
-            products.remove(product);
-            product.setGroup(null);
-        }
-    }
-
+    private List<Product> products;
 }

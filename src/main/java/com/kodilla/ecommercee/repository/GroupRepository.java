@@ -15,6 +15,7 @@ import java.util.Optional;
 
 @Repository
 public interface GroupRepository extends CrudRepository<Group, Long> {
+
     @Query("SELECT g FROM Group g LEFT JOIN FETCH g.products WHERE g.id = :id")
     Optional<Group> findByIdWithProducts(@Param("id") Long id);
 
