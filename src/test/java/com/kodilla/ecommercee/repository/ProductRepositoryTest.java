@@ -90,16 +90,16 @@ class ProductRepositoryTest {
         product3.setPrice(new BigDecimal("3.99"));
         product3.setGroup(group);
         Long groupId = group.getId();
-//        Long productsInGroup = groupRepository.findById(groupId).get().getProducts().stream().count();
+        Long productsInGroup = groupRepository.findById(groupId).get().getProducts().stream().count();
 
         Product result = productRepository.save(product3);
-//        group.getProducts().add(product3);
+        group.getProducts().add(product3);
         groupRepository.save(group);
 
         assertNotNull(result);
         assertEquals("Orange", result.getName());
         assertEquals(3, productRepository.findAll().size());
-//        assertEquals(3, productsInGroup);
+        assertEquals(3, productsInGroup);
     }
 
     @Test
