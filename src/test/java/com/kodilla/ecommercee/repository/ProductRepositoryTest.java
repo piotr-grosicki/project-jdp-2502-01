@@ -86,7 +86,6 @@ class ProductRepositoryTest {
         product3.setPrice(new BigDecimal("3.99"));
         product3.setGroup(group);
         Long groupId = group.getId();
-
 //      WHEN
         Product result = productRepository.save(product3);
         group.getProducts().add(product3);
