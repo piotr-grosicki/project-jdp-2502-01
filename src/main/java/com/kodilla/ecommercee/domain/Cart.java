@@ -4,11 +4,13 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity(name = "CARTS")
@@ -36,15 +38,4 @@ public class Cart {
         return products;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public void setUsers(User users) {
-        this.users = users;
-    }
-
-    public void setProducts(List<Product> products) {
-        this.products = products;
-    }
 }
