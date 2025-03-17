@@ -112,24 +112,22 @@ class ProductRepositoryTest {
     }
 
     @Test
-
     void shouldDeleteProduct() {
-        // GIVEN
+//      GIVEN
+//      WHEN
         productRepository.deleteById(product1.getId());
-        // WHEN
         Group savedGroup = groupRepository.findByIdWithProducts(group.getId())
                 .orElseThrow(() -> new RuntimeException("Grupa nie została znaleziona"));
 
-        // THEN
+//      THEN
         assertEquals(1, productRepository.findAll().size(), "Liczba produktów w bazie powinna wynosić 1");
         assertEquals(1, savedGroup.getProducts().size(), "Grupa powinna zawierać 1 produkt");
     }
 
     @Test
-    @Transactional
     public void isTestProductsInGroup() {
 //      GIVEN
-//        WHEN
+//      WHEN
         Group savedGroup = groupRepository.findByIdWithProducts(group.getId())
                 .orElseThrow(() -> new RuntimeException("Grupa nie została znaleziona"));
 //      THEN
