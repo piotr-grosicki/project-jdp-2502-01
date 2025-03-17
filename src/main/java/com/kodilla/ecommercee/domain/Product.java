@@ -27,7 +27,6 @@ public class Product {
     @Column(name = "PRICE", nullable = false)
     private BigDecimal price;
 
-//    !!! Do czasu dodania encji Group relacja musi być zakomentowana żeby projekt się budował. !!!
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "group_id", nullable = false)
     private Group group;
