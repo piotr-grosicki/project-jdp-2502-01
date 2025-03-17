@@ -21,10 +21,9 @@ public class Cart {
     @Column(name = "CART_ID", nullable = false)
     private Long id;
 
-// !!! Czeka na implementację encji User !!!
-//    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-//    @JoinColumn(name = "USER_ID", nullable = false)
-//    private User users;
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "USER_ID", nullable = false)
+    private User user;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
@@ -33,5 +32,4 @@ public class Cart {
             inverseJoinColumns = @JoinColumn(name = "PRODUCT_ID")
     )
     private List<Product> products;
-
 }
