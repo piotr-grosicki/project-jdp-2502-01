@@ -30,12 +30,12 @@ public class Order {
     @Column(name = "TOTAL_PRICE", nullable = false)
     private BigDecimal totalPrice;
 
-    /*
-    Relacja zakomentowana w oczekiwaniu na klasę User
 
-    @ManyToOne
-    @JoinColumn(name = "USER_ID", referencedColumnName = "USER_ID", insertable = false, updatable = false)
-    private User user;
+//    Relacja zakomentowana w oczekiwaniu na klasę User
+//
+//    @ManyToOne
+//    @JoinColumn(name = "USER_ID", referencedColumnName = "USER_ID", insertable = false, updatable = false)
+//    private User user;
 
     @ManyToMany
     @JoinTable(
@@ -43,7 +43,7 @@ public class Order {
             joinColumns = {@JoinColumn(name = "ORDER_ID", referencedColumnName = "ORDER_ID")},
             inverseJoinColumns = {@JoinColumn(name = "PRODUCT_ID", referencedColumnName = "PRODUCT_ID")}
     )
-    private List<Products> products;
-     */
+    private List<Product> products;
+
 }
 
