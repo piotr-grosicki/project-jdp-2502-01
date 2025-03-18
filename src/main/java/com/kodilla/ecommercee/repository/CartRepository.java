@@ -7,6 +7,5 @@ import org.springframework.stereotype.Repository;
 
 @Transactional
 @Repository
-public interface CartRepository extends CrudRepository<Cart, Integer> {
-
+public interface CartRepository extends CrudRepository<Cart, Long> {
 }
