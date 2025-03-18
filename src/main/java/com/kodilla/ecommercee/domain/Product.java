@@ -1,13 +1,12 @@
 package com.kodilla.ecommercee.domain;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.math.BigDecimal;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -17,7 +16,7 @@ public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "PRODUCT_ID")
-    private long id;
+    private Long id;
 
     @Column(name = "NAME", nullable = false)
     private String name;
@@ -28,8 +27,8 @@ public class Product {
     @Column(name = "PRICE", nullable = false)
     private BigDecimal price;
 
-//    !!! Do czasu dodania encji Group relacja musi być zakomentowana żeby projekt się budował. !!!
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "GROUP_ID", nullable = false)
     private Group group;
+
 }
