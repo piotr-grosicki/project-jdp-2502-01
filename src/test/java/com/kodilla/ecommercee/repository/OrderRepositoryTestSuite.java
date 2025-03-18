@@ -3,6 +3,7 @@ package com.kodilla.ecommercee.repository;
 import com.kodilla.ecommercee.domain.Group;
 import com.kodilla.ecommercee.domain.Order;
 import com.kodilla.ecommercee.domain.Product;
+import com.kodilla.ecommercee.domain.User;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,6 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
 
 @SpringBootTest
 public class OrderRepositoryTestSuite {
@@ -26,6 +28,8 @@ public class OrderRepositoryTestSuite {
     private GroupRepository groupRepository;
     @Autowired
     private ProductRepository productRepository;
+    @Autowired
+    private UserRepository userRepository;
 
     @AfterEach
     public void cleanUp() {
@@ -37,16 +41,18 @@ public class OrderRepositoryTestSuite {
         //Given
         List<Product> products = new ArrayList<>();
         Group group = new Group(1L, "group", products);
-        Product product = new Product(1, "product", "description", BigDecimal.valueOf(1000), group);
+        Product product = new Product(1L, "product", "description", BigDecimal.valueOf(1000), group);
         products.add(product);
+        User user = new User(1);
         groupRepository.save(group);
         productRepository.save(product);
+        userRepository.save(user);
 
-        Order order = new Order(1, LocalDate.now(), 3, BigDecimal.valueOf(1000), products);
+        Order order = new Order(1L, LocalDate.now(), user, BigDecimal.valueOf(1000), products);
 
         //When
         orderRepository.save(order);
-        int id = order.getId();
+        Long id = order.getId();
 
         //Then
         assertEquals(1,id);
@@ -58,13 +64,17 @@ public class OrderRepositoryTestSuite {
         //Given
         List<Product> products = new ArrayList<>();
         Group group = new Group(1L, "group", products);
-        Product product = new Product(1, "product", "description", BigDecimal.valueOf(1000), group);
+        Product product = new Product(1L, "product", "description", BigDecimal.valueOf(1000), group);
         products.add(product);
+        User user = new User(1);
+        User user2 = new User(2);
         groupRepository.save(group);
         productRepository.save(product);
+        userRepository.save(user);
+        userRepository.save(user2);
 
-        Order order = new Order(1, LocalDate.now(), 3, BigDecimal.valueOf(1000), products);
-        Order order2 = new Order(2, LocalDate.now(), 4, BigDecimal.valueOf(1000), products);
+        Order order = new Order(1L, LocalDate.now(), user, BigDecimal.valueOf(1000), products);
+        Order order2 = new Order(2L, LocalDate.now(), user2, BigDecimal.valueOf(1000), products);
 
         orderRepository.save(order);
         orderRepository.save(order2);
@@ -83,12 +93,14 @@ public class OrderRepositoryTestSuite {
         //Given
         List<Product> products = new ArrayList<>();
         Group group = new Group(1L, "group", products);
-        Product product = new Product(1, "product", "description", BigDecimal.valueOf(1000), group);
+        Product product = new Product(1L, "product", "description", BigDecimal.valueOf(1000), group);
         products.add(product);
+        User user = new User(1);
         groupRepository.save(group);
         productRepository.save(product);
+        userRepository.save(user);
 
-        Order order = new Order(1, LocalDate.now(), 3, BigDecimal.valueOf(1000), products);
+        Order order = new Order(1L, LocalDate.now(), user, BigDecimal.valueOf(1000), products);
         Order savedOrder = orderRepository.save(order);
 
         //When
@@ -96,7 +108,7 @@ public class OrderRepositoryTestSuite {
 
         //Then
         assertEquals(1000, orderById.getTotalPrice().intValue());
-        assertEquals(3, orderById.getUserId());
+        assertEquals(1, orderById.getUser().getId());
 
     }
 
@@ -105,16 +117,18 @@ public class OrderRepositoryTestSuite {
         //Given
         List<Product> products = new ArrayList<>();
         Group group = new Group(1L, "group", products);
-        Product product = new Product(1, "product", "description", BigDecimal.valueOf(1000), group);
+        Product product = new Product(1L, "product", "description", BigDecimal.valueOf(1000), group);
         products.add(product);
+        User user = new User(1);
         groupRepository.save(group);
         productRepository.save(product);
+        userRepository.save(user);
 
-        Order order = new Order(1, LocalDate.now(), 3, BigDecimal.valueOf(1000), products);
+        Order order = new Order(1L, LocalDate.now(), user, BigDecimal.valueOf(1000), products);
         orderRepository.save(order);
 
         //When
-        orderRepository.deleteById(order.getId());
+        orderRepository.deleteById(Math.toIntExact(order.getId()));
 
         //Then
         assertEquals(0, orderRepository.findAll().size());
@@ -126,12 +140,14 @@ public class OrderRepositoryTestSuite {
         //Given
         List<Product> products = new ArrayList<>();
         Group group = new Group(1L, "group", products);
-        Product product = new Product(1, "product", "description", BigDecimal.valueOf(1000), group);
+        Product product = new Product(1L, "product", "description", BigDecimal.valueOf(1000), group);
         products.add(product);
+        User user = new User(1);
         groupRepository.save(group);
         productRepository.save(product);
+        userRepository.save(user);
 
-        Order order = new Order(1, LocalDate.now(), 3, BigDecimal.valueOf(1000), products);
+        Order order = new Order(1L, LocalDate.now(), user, BigDecimal.valueOf(1000), products);
         orderRepository.save(order);
 
         //When
