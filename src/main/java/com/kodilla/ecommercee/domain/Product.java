@@ -14,47 +14,33 @@ import java.util.List;
 @Entity(name = "PRODUCTS")
 public class Product {
 
-    private Long id;
-    private List<Cart> carts = new ArrayList<>();
-    private String name;
-    private String description;
-    private BigDecimal price;
-    private Integer groupId;
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "PRODUCT_ID")
-    public Long getId() {
-        return id;
-    }
+    private Long id;
 
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
-            name = "JOIN_CART_PRODUCT",
+            name = "CART_PRODUCT",
             joinColumns = {@JoinColumn(name = "PRODUCT_ID", referencedColumnName = "PRODUCT_ID")},
             inverseJoinColumns = {@JoinColumn(name = "CART_ID", referencedColumnName = "CART_ID")}
     )
-    public List<Cart> getCarts() {
-        return carts;
-    }
+    private List<Cart> carts = new ArrayList<>();
 
     @Column(name = "NAME")
-    public String getName() {
-        return name;
-    }
+    private String name;
 
     @Column(name = "DESCRIPTION")
-    public String getDescription() {
-        return description;
-    }
+    private String description;
 
     @Column(name = "PRICE")
-    public BigDecimal getPrice() {
-        return price;
-    }
+    private BigDecimal price;
 
     @Column(name = "GROUP_ID")
-    public Integer getGroupId() {
-        return groupId;
-    }
+    private Integer groupId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "GROUP_ID", referencedColumnName = "GROUP_ID")
+    private Group group;
 }

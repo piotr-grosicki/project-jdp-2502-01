@@ -4,47 +4,33 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity(name = "CART")
+@Entity
+@Table(name = "CARTS")
 public class Cart {
 
-    private int id;
-    private Users users;
-    private List<Product> products = new ArrayList<>();
-
     @Id
-    @GeneratedValue
-    @Column(name = "CART_ID")
-    public int getId() {
-        return id;
-    }
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "CART_ID", nullable = false)
+    private Long id;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "USER_ID")
-    public Users getUsers() {
-        return users;
-    }
+    @JoinColumn(name = "USER_ID", nullable = false)
+    private User user;
 
-    @ManyToMany(cascade = CascadeType.ALL, mappedBy = "carts")
-    public List<Product> getProducts() {
-        return products;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public void setUsers(Users users) {
-        this.users = users;
-    }
-
-    public void setProducts(List<Product> products) {
-        this.products = products;
-    }
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "CART_PRODUCT",
+            joinColumns = @JoinColumn(name = "CART_ID"),
+            inverseJoinColumns = @JoinColumn(name = "PRODUCT_ID")
+    )
+    private List<Product> products = new ArrayList<>();
 }

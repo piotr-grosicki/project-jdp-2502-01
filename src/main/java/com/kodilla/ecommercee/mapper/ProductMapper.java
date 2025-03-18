@@ -10,15 +10,14 @@ import java.util.List;
 public class ProductMapper {
 
     public Product mapToProduct(final ProductDto productDto) {
-        return new Product(
-                productDto.getId(),
-                null,
-                productDto.getName(),
-                productDto.getDescription(),
-                productDto.getPrice(),
-                null
-                );
+        Product product = new Product();
+        product.setId(productDto.getId());
+        product.setName(productDto.getName());
+        product.setDescription(productDto.getDescription());
+        product.setPrice(productDto.getPrice());
+        return product;
     }
+
 
     public ProductDto mapToProductDto(final Product product) {
         return new ProductDto(
