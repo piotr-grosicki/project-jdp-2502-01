@@ -1,13 +1,17 @@
 package com.kodilla.ecommercee.repository;
 
+import com.kodilla.ecommercee.domain.Group;
 import com.kodilla.ecommercee.domain.Order;
+import com.kodilla.ecommercee.domain.Product;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,6 +22,10 @@ public class OrderRepositoryTestSuite {
 
     @Autowired
     private OrderRepository orderRepository;
+    @Autowired
+    private GroupRepository groupRepository;
+    @Autowired
+    private ProductRepository productRepository;
 
     @AfterEach
     public void cleanUp() {
@@ -27,10 +35,14 @@ public class OrderRepositoryTestSuite {
     @Test
     void testOrderRepositorySave() {
         //Given
-        Order order = new Order();
-        order.setOrderDate(LocalDate.now());
-        order.setTotalPrice(BigDecimal.valueOf(1000));
-        order.setUserId(3);
+        List<Product> products = new ArrayList<>();
+        Group group = new Group(1L, "group", products);
+        Product product = new Product(1, "product", "description", BigDecimal.valueOf(1000), group);
+        products.add(product);
+        groupRepository.save(group);
+        productRepository.save(product);
+
+        Order order = new Order(1, LocalDate.now(), 3, BigDecimal.valueOf(1000), products);
 
         //When
         orderRepository.save(order);
@@ -44,14 +56,16 @@ public class OrderRepositoryTestSuite {
     @Test
     void testOrderRepositoryGetAllOrders() {
         //Given
-        Order order = new Order();
-        Order order2 = new Order();
-        order.setOrderDate(LocalDate.now());
-        order.setTotalPrice(BigDecimal.valueOf(1000));
-        order.setUserId(3);
-        order2.setOrderDate(LocalDate.now());
-        order2.setTotalPrice(BigDecimal.valueOf(2000));
-        order2.setUserId(2);
+        List<Product> products = new ArrayList<>();
+        Group group = new Group(1L, "group", products);
+        Product product = new Product(1, "product", "description", BigDecimal.valueOf(1000), group);
+        products.add(product);
+        groupRepository.save(group);
+        productRepository.save(product);
+
+        Order order = new Order(1, LocalDate.now(), 3, BigDecimal.valueOf(1000), products);
+        Order order2 = new Order(2, LocalDate.now(), 4, BigDecimal.valueOf(1000), products);
+
         orderRepository.save(order);
         orderRepository.save(order2);
 
@@ -67,10 +81,14 @@ public class OrderRepositoryTestSuite {
     @Test
     void testOrderRepositoryGetOrder() {
         //Given
-        Order order = new Order();
-        order.setOrderDate(LocalDate.now());
-        order.setTotalPrice(BigDecimal.valueOf(1000));
-        order.setUserId(3);
+        List<Product> products = new ArrayList<>();
+        Group group = new Group(1L, "group", products);
+        Product product = new Product(1, "product", "description", BigDecimal.valueOf(1000), group);
+        products.add(product);
+        groupRepository.save(group);
+        productRepository.save(product);
+
+        Order order = new Order(1, LocalDate.now(), 3, BigDecimal.valueOf(1000), products);
         Order savedOrder = orderRepository.save(order);
 
         //When
@@ -85,10 +103,14 @@ public class OrderRepositoryTestSuite {
     @Test
     void testOrderRepositoryDeleteOrder() {
         //Given
-        Order order = new Order();
-        order.setOrderDate(LocalDate.now());
-        order.setTotalPrice(BigDecimal.valueOf(1000));
-        order.setUserId(3);
+        List<Product> products = new ArrayList<>();
+        Group group = new Group(1L, "group", products);
+        Product product = new Product(1, "product", "description", BigDecimal.valueOf(1000), group);
+        products.add(product);
+        groupRepository.save(group);
+        productRepository.save(product);
+
+        Order order = new Order(1, LocalDate.now(), 3, BigDecimal.valueOf(1000), products);
         orderRepository.save(order);
 
         //When
@@ -102,10 +124,14 @@ public class OrderRepositoryTestSuite {
     @Test
     void testOrderRepositoryUpdateOrder() {
         //Given
-        Order order = new Order();
-        order.setOrderDate(LocalDate.now());
-        order.setTotalPrice(BigDecimal.valueOf(1000));
-        order.setUserId(3);
+        List<Product> products = new ArrayList<>();
+        Group group = new Group(1L, "group", products);
+        Product product = new Product(1, "product", "description", BigDecimal.valueOf(1000), group);
+        products.add(product);
+        groupRepository.save(group);
+        productRepository.save(product);
+
+        Order order = new Order(1, LocalDate.now(), 3, BigDecimal.valueOf(1000), products);
         orderRepository.save(order);
 
         //When
@@ -120,7 +146,5 @@ public class OrderRepositoryTestSuite {
         assertEquals(1, all.size());
 
     }
-
-
 
 }
