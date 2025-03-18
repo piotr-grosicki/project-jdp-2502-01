@@ -16,13 +16,18 @@ import java.util.List;
 @Table(name = "CARTS")
 public class Cart {
 
+    public Cart(Long id, List<Product> products) {
+        this.id = id;
+        this.products = products;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "CART_ID", nullable = false)
     private Long id;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "USER_ID", nullable = false)
+    @JoinColumn(name = "USER_ID")
     private User user;
 
     @ManyToMany(fetch = FetchType.EAGER)
