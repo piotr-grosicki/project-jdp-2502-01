@@ -5,7 +5,6 @@ import com.kodilla.ecommercee.domain.Order;
 import com.kodilla.ecommercee.domain.Product;
 import com.kodilla.ecommercee.domain.User;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,7 +16,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
 
 @SpringBootTest
 public class OrderRepositoryTestSuite {
@@ -104,7 +102,8 @@ public class OrderRepositoryTestSuite {
         Order savedOrder = orderRepository.save(order);
 
         //When
-        Order orderById = orderRepository.findById(savedOrder.getId());
+        Optional<Order> byId = orderRepository.findById(savedOrder.getId());
+        Order orderById = byId.get();
 
         //Then
         assertEquals(1000, orderById.getTotalPrice().intValue());
@@ -128,7 +127,7 @@ public class OrderRepositoryTestSuite {
         orderRepository.save(order);
 
         //When
-        orderRepository.deleteById(Math.toIntExact(order.getId()));
+        orderRepository.deleteById((long) Math.toIntExact(order.getId()));
 
         //Then
         assertEquals(0, orderRepository.findAll().size());
@@ -151,7 +150,8 @@ public class OrderRepositoryTestSuite {
         orderRepository.save(order);
 
         //When
-        Order updateOrder = orderRepository.findById(order.getId());
+        Optional<Order> updateOrderOptional = orderRepository.findById(order.getId());
+        Order updateOrder= updateOrderOptional.get();
         updateOrder.setTotalPrice(BigDecimal.valueOf(5000));
         orderRepository.save(updateOrder);
 
