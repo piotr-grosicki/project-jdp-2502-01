@@ -3,15 +3,18 @@ package com.kodilla.ecommercee.domain;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
 @Getter
 @AllArgsConstructor
 public class OrderDto {
 
-    private int id;
+    private Long id;
     private LocalDate orderDate;
-    private int userId;
-    private double totalPrice;
+    private Long userId;
+    private BigDecimal totalPrice;
+    private List<Product> products;
 
 }
