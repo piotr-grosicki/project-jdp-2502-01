@@ -22,11 +22,26 @@ public class Group {
     @Column(name = "GROUP_NAME", nullable = false, length = 100)
     private String name;
 
-    @OneToMany(
-            targetEntity = Product.class,
-            mappedBy = "group",
-            cascade = CascadeType.ALL,
-            fetch = FetchType.LAZY
-    )
+    @OneToMany(mappedBy = "group", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Product> products = new ArrayList<>();
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Group{id=").append(id)
+                .append(", name='").append(name).append('\'')
+                .append(", products=[");
+
+        for (Product product : products) {
+            sb.append("{id=").append(product.getId())
+                    .append(", name='").append(product.getName()).append("'}, ");
+        }
+
+        if (!products.isEmpty()) {
+            sb.setLength(sb.length() - 2); // usuń ostatni przecinek
+        }
+
+        sb.append("]}");
+        return sb.toString();
+    }
 }

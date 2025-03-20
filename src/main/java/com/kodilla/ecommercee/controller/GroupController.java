@@ -31,7 +31,7 @@ public class GroupController {
     }
 
     @PutMapping("/{groupId}")
-    public ResponseEntity<GroupDto> updateGroupName(@PathVariable Long groupId, @RequestBody String newName) throws GroupNotFoundException {
-        return ResponseEntity.ok(groupService.updateGroupName(groupId, newName));
+    public ResponseEntity<GroupDto> updateGroupName(@PathVariable Long groupId, @RequestBody GroupDto dto) throws GroupNotFoundException {
+        return ResponseEntity.ok(groupService.updateGroupName(groupId, dto));
     }
 }

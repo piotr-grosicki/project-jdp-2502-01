@@ -4,10 +4,13 @@ import com.kodilla.ecommercee.domain.Group;
 import com.kodilla.ecommercee.domain.Product;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +18,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class ProductRepositoryTest {
 
     @Autowired
@@ -34,7 +38,6 @@ class ProductRepositoryTest {
         group = new Group();
         group.setName("Fruits");
         group = groupRepository.save(group);
-        Long groupId = group.getId();
 
         // Tworzenie produktów i przypisanie grupy
         product1 = new Product();
@@ -52,8 +55,8 @@ class ProductRepositoryTest {
         product2 = productRepository.save(product2);
 
         group.setProducts(new ArrayList<>(List.of(product1, product2)));
+        groupRepository.save(group);
     }
-
     @AfterEach
     void tearDown() {
         productRepository.deleteAll();
@@ -78,6 +81,7 @@ class ProductRepositoryTest {
     }
 
     @Test
+    @Transactional
     void shouldCreateProduct() {
 //        GIVEN
         product3 = new Product();
@@ -111,16 +115,25 @@ class ProductRepositoryTest {
     }
 
     @Test
+    @Transactional
     void shouldDeleteProduct() {
-//      GIVEN
-//      WHEN
-        productRepository.deleteById(product1.getId());
-        Group savedGroup = groupRepository.findByIdWithProducts(group.getId())
-                .orElseThrow(() -> new RuntimeException("Grupa nie została znaleziona"));
+        // GIVEN
+        List<Product> productsBefore = productRepository.findAll();
+        System.out.println("Before delete: " + productsBefore);
 
-//      THEN
-        assertEquals(1, productRepository.findAll().size(), "Liczba produktów w bazie powinna wynosić 1");
-        assertEquals(1, savedGroup.getProducts().size(), "Grupa powinna zawierać 1 produkt");
+
+        group.getProducts().removeIf(p -> p.getId().equals(product1.getId()));
+        groupRepository.save(group);
+
+        // WHEN
+        productRepository.deleteById(product1.getId());
+
+        List<Product> productsAfterDelete = productRepository.findAll();
+        System.out.println("After delete: " + productsAfterDelete);
+
+        // Then
+        Assertions.assertEquals(1, productsAfterDelete.size(), "Liczba produktów w bazie powinna wynosić 1");
+        Assertions.assertFalse(productsAfterDelete.stream().anyMatch(p -> p.getId().equals(product1.getId())));
     }
 
     @Test

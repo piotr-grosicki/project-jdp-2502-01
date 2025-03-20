@@ -25,9 +25,9 @@ public class GroupService {
                 .collect(Collectors.toList());
     }
 
-    public GroupDto getGroupById(Long groupId) throws GroupNotFoundException {
+    public GroupDto getGroupById(Long groupId) {
         Group group = groupRepository.findById(groupId)
-                .orElseThrow(GroupNotFoundException::new);
+                .orElseThrow(() -> new GroupNotFoundException("Group with id " + groupId + " not found"));
         return groupMapper.mapToGroupDto(group);
     }
 
@@ -37,10 +37,10 @@ public class GroupService {
         return groupMapper.mapToGroupDto(savedGroup);
     }
 
-    public GroupDto updateGroupName(Long groupId, String newName) throws GroupNotFoundException {
+    public GroupDto updateGroupName(Long groupId, GroupDto dto){
         Group group = groupRepository.findById(groupId)
-                .orElseThrow(GroupNotFoundException::new);
-        group.setName(newName);
+                .orElseThrow(() -> new GroupNotFoundException("Group with id " + groupId + " not found"));
+        group.setName(dto.getName());
         Group savedGroup = groupRepository.save(group);
         return groupMapper.mapToGroupDto(savedGroup);
     }
