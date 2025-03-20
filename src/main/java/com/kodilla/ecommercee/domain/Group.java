@@ -7,18 +7,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "product_groups")
-@Data
-@AllArgsConstructor
+@Table(name = "PRODUCT_GROUPS")
+@Getter
+@Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class Group {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "group_id")
+    @Column(name = "GROUP_ID")
     private Long id;
 
-    @Column(name = "group_name")
+    @Column(name = "GROUP_NAME", nullable = false, length = 100)
     private String name;
 
     @OneToMany(
