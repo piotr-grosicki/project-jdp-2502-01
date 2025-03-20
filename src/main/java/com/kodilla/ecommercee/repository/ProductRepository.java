@@ -9,7 +9,6 @@ import java.util.Optional;
 
 @Repository
 public interface ProductRepository extends CrudRepository<Product, Long> {
-
     @Override
     List<Product> findAll();
 
@@ -18,5 +17,5 @@ public interface ProductRepository extends CrudRepository<Product, Long> {
     @Override
     Optional<Product> findById(Long id);
 
-    void deleteById(int i);
+    void deleteById(Long id);
 }
