@@ -1,6 +1,6 @@
-package com.kodilla.ecommercee.user.controller;
+package com.kodilla.ecommercee.controller;
 
-import com.kodilla.ecommercee.user.domain.UserDto;
+import com.kodilla.ecommercee.domain.UserDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
