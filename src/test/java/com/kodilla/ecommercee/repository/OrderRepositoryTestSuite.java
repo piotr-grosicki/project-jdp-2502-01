@@ -33,6 +33,9 @@ public class OrderRepositoryTestSuite {
     @AfterEach
     public void cleanUp() {
         orderRepository.deleteAll();
+        userRepository.deleteAll();
+        productRepository.deleteAll();
+        groupRepository.deleteAll();
     }
 
     @Test
@@ -108,7 +111,7 @@ public class OrderRepositoryTestSuite {
 
         //Then
         assertEquals(1000, orderById.getTotalPrice().intValue());
-//        assertEquals(1, orderById.getUser().getId());
+//        assertEquals(1L, orderById.getUser().getId());
 
     }
 
