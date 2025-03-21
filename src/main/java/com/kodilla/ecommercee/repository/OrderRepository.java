@@ -9,6 +9,7 @@ import java.util.Optional;
 
 @Repository
 public interface OrderRepository extends CrudRepository<Order, Long> {
+
     @Override
     List<Order> findAll();
 
