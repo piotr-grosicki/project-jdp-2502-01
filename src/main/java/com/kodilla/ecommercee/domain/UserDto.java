@@ -21,6 +21,4 @@ public class UserDto {
     private boolean blocked;
     private String token;
     private LocalDateTime expiresAt;
-    private List<Order> orders;
-    private Cart cart;
 }
