@@ -134,7 +134,7 @@ public class OrderRepositoryTestSuite {
         orderRepository.deleteById((long) Math.toIntExact(order.getId()));
 
         //Then
-        assertEquals(1, orderRepository.findAll().size());
+        assertEquals(0, orderRepository.findAll().size());
 
     }
 
