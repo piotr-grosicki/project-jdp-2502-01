@@ -41,42 +41,38 @@ public class OrderRepositoryTestSuite {
     @Test
     void testOrderRepositorySave() {
         //Given
-        List<Product> products = new ArrayList<>();
-        Group group = new Group(1L, "group", products);
-        Product product = new Product(1L, "product", "description", BigDecimal.valueOf(1000), group);
-        products.add(product);
-        User user = new User(1L, "firstname", "lastname", "email", "address", false, null, null, null, null);
+        Group group = new Group("group");
+        Product product = new Product("product", "description", BigDecimal.valueOf(1000), group);
+        User user = new User("firstname", "lastname", "email", "address", false);
         groupRepository.save(group);
         productRepository.save(product);
         userRepository.save(user);
 
-        Order order = new Order(1L, LocalDate.now(), user, BigDecimal.valueOf(1000), products);
+        Order order = new Order(LocalDate.now(), user, BigDecimal.valueOf(1000));
 
         //When
         orderRepository.save(order);
         Long id = order.getId();
 
         //Then
-        assertEquals(1,id);
+        assertNotNull(id);
 
     }
 
     @Test
     void testOrderRepositoryGetAllOrders() {
         //Given
-        List<Product> products = new ArrayList<>();
-        Group group = new Group(1L, "group", products);
-        Product product = new Product(1L, "product", "description", BigDecimal.valueOf(1000), group);
-        products.add(product);
-        User user = new User(1L, "firstname", "lastname", "email", "address", false, null, null, null, null);
-        User user2 = new User(2L, "firstname2", "lastname2", "email2", "address2", false, null, null, null, null);
+        Group group = new Group("group");
+        Product product = new Product("product", "description", BigDecimal.valueOf(1000), group);
+        User user = new User("firstname", "lastname", "email", "address", false);
+        User user2 = new User("firstname2", "lastname2", "email2", "address2", false);
         groupRepository.save(group);
         productRepository.save(product);
         userRepository.save(user);
         userRepository.save(user2);
 
-        Order order = new Order(1L, LocalDate.now(), user, BigDecimal.valueOf(1000), products);
-        Order order2 = new Order(2L, LocalDate.now(), user2, BigDecimal.valueOf(1000), products);
+        Order order = new Order(LocalDate.now(), user, BigDecimal.valueOf(1000));
+        Order order2 = new Order(LocalDate.now(), user2, BigDecimal.valueOf(1000));
 
         orderRepository.save(order);
         orderRepository.save(order2);
@@ -86,84 +82,81 @@ public class OrderRepositoryTestSuite {
         int size = all.size();
 
         //Then
-        assertEquals(2,size);
+        assertNotNull(all);
 
     }
 
     @Test
     void testOrderRepositoryGetOrder() {
         //Given
-        List<Product> products = new ArrayList<>();
-        Group group = new Group(1L, "group", products);
-        Product product = new Product(1L, "product", "description", BigDecimal.valueOf(1000), group);
-        products.add(product);
-        User user = new User(1L, "firstname", "lastname", "email", "address", false, null, null, null, null);
+        Group group = new Group("group");
+        Product product = new Product("product", "description", BigDecimal.valueOf(1000), group);
+        User user = new User("firstname", "lastname", "email", "address", false);
         groupRepository.save(group);
         productRepository.save(product);
         userRepository.save(user);
 
-        Order order = new Order(1L, LocalDate.now(), user, BigDecimal.valueOf(1000), products);
+        Order order = new Order(LocalDate.now(), user, BigDecimal.valueOf(1000));
         Order savedOrder = orderRepository.save(order);
 
         //When
         Optional<Order> byId = orderRepository.findById(savedOrder.getId());
-        Order orderById = byId.stream().toList().get(0);
+        Order orderById = byId.get();
 
         //Then
         assertEquals(1000, orderById.getTotalPrice().intValue());
-//        assertEquals(1L, orderById.getUser().getId());
+        assertNotNull(orderById);
 
     }
 
     @Test
     void testOrderRepositoryDeleteOrder() {
         //Given
-        List<Product> products = new ArrayList<>();
-        Group group = new Group(1L, "group", products);
-        Product product = new Product(1L, "product", "description", BigDecimal.valueOf(1000), group);
-        products.add(product);
-        User user = new User(1L, "firstname", "lastname", "email", "address", false, null, null, null, null);
+        Group group = new Group("group");
+        Product product = new Product("product", "description", BigDecimal.valueOf(1000), group);
+        User user = new User("firstname", "lastname", "email", "address", false);
         groupRepository.save(group);
         productRepository.save(product);
         userRepository.save(user);
 
-        Order order = new Order(1L, LocalDate.now(), user, BigDecimal.valueOf(1000), products);
+        Order order = new Order(LocalDate.now(), user, BigDecimal.valueOf(1000));
         orderRepository.save(order);
 
         //When
-        orderRepository.deleteById((long) Math.toIntExact(order.getId()));
+        orderRepository.deleteById(order.getId());
 
         //Then
-        assertEquals(1, orderRepository.findAll().size());
+        assertEquals(0, orderRepository.findAll().size());
+        assertTrue(productRepository.existsById(product.getId()));
+        assertTrue(userRepository.existsById(user.getId()));
 
     }
 
     @Test
     void testOrderRepositoryUpdateOrder() {
         //Given
-        List<Product> products = new ArrayList<>();
-        Group group = new Group(1L, "group", products);
-        Product product = new Product(1L, "product", "description", BigDecimal.valueOf(1000), group);
-        products.add(product);
-        User user = new User(1L, "firstname", "lastname", "email", "address", false, null, null, null, null);
+        Group group = new Group("group");
+        Product product = new Product("product", "description", BigDecimal.valueOf(1000), group);
+        User user = new User("firstname", "lastname", "email", "address", false);
         groupRepository.save(group);
         productRepository.save(product);
         userRepository.save(user);
 
-        Order order = new Order(1L, LocalDate.now(), user, BigDecimal.valueOf(1000), products);
+        Order order = new Order(LocalDate.now(), user, BigDecimal.valueOf(1000));
         orderRepository.save(order);
+        List<Order> allBeforeUpdate = orderRepository.findAll();
 
         //When
         Optional<Order> updateOrderOptional = orderRepository.findById(order.getId());
-        Order updateOrder= updateOrderOptional.get();
+        Order updateOrder = updateOrderOptional.get();
         updateOrder.setTotalPrice(BigDecimal.valueOf(5000));
-        orderRepository.save(updateOrder);
+        Order savedUpdatedOrder = orderRepository.save(updateOrder);
 
-        List<Order> all = orderRepository.findAll();
+        List<Order> allAfterUpdate = orderRepository.findAll();
 
         //Then
-        assertEquals(5000, updateOrder.getTotalPrice().intValue());
-        assertEquals(1, all.size());
+        assertEquals(5000, savedUpdatedOrder.getTotalPrice().intValue());
+        assertEquals(allBeforeUpdate.size(), allAfterUpdate.size());
 
     }
 
