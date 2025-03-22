@@ -3,6 +3,7 @@ package com.kodilla.ecommercee.service;
 import com.kodilla.ecommercee.controller.GroupNotFoundException;
 import com.kodilla.ecommercee.domain.Group;
 import com.kodilla.ecommercee.domain.GroupDto;
+import com.kodilla.ecommercee.mapper.GroupMapper;
 import com.kodilla.ecommercee.repository.GroupRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
