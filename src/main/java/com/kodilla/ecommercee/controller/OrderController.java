@@ -1,6 +1,9 @@
 package com.kodilla.ecommercee.controller;
 
 import com.kodilla.ecommercee.domain.OrderDto;
+
+import com.kodilla.ecommercee.domain.Product;
+
 import com.kodilla.ecommercee.domain.User;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -20,8 +23,10 @@ public class OrderController {
     }
 
     @GetMapping(value = "{id}")
-    public OrderDto getOrder(@PathVariable long id) {
-        return new OrderDto(1L, LocalDate.now(), 1L, new BigDecimal("500.20"), new ArrayList<>());
+
+    public OrderDto getOrder(@PathVariable int id) {
+        List<Product> products = new ArrayList<>();
+        return new OrderDto(1L, LocalDate.now(), new User(), new BigDecimal(1000), products);
     }
 
     @DeleteMapping(value = "{id}")
@@ -34,7 +39,9 @@ public class OrderController {
 
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public OrderDto updateOrder(@RequestBody OrderDto orderDto) {
-        return new OrderDto(5L, LocalDate.now(),1L, new BigDecimal("600"), new ArrayList<>());
+
+        List<Product> products = new ArrayList<>();
+        return new OrderDto(1L, LocalDate.now(), new User(), new BigDecimal(1000), products);
     }
 
 }

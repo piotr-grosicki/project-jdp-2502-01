@@ -13,8 +13,7 @@ public class OrderDto {
 
     private Long id;
     private LocalDate orderDate;
-    private Long userId;
+    private User user;
     private BigDecimal totalPrice;
     private List<Product> products;
-
 }
