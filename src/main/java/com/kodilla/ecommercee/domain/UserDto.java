@@ -20,7 +20,7 @@ public class UserDto {
     private boolean blocked;
     private String token;
     private LocalDate dateOfExpiry;
-    private CartDto cart;
+    private Long cartId;
     private List<Long> ordersId;
 
 }
