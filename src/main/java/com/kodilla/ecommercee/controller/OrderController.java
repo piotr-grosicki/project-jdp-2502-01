@@ -25,8 +25,8 @@ public class OrderController {
     @GetMapping(value = "{id}")
 
     public OrderDto getOrder(@PathVariable int id) {
-        List<Product> products = new ArrayList<>();
-        return new OrderDto(1L, LocalDate.now(), new User(), new BigDecimal(1000), products);
+        List<Long> products = new ArrayList<>();
+        return new OrderDto(1L, LocalDate.now(), 1L, new BigDecimal(1000), products);
     }
 
     @DeleteMapping(value = "{id}")
@@ -40,8 +40,8 @@ public class OrderController {
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public OrderDto updateOrder(@RequestBody OrderDto orderDto) {
 
-        List<Product> products = new ArrayList<>();
-        return new OrderDto(1L, LocalDate.now(), new User(), new BigDecimal(1000), products);
+        List<Long> products = new ArrayList<>();
+        return new OrderDto(1L, LocalDate.now(), 1L, new BigDecimal(1000), products);
     }
 
 }

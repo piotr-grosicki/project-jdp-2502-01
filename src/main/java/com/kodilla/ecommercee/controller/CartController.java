@@ -1,9 +1,6 @@
 package com.kodilla.ecommercee.controller;
 
-import com.kodilla.ecommercee.domain.Cart;
-import com.kodilla.ecommercee.domain.CartDto;
-import com.kodilla.ecommercee.domain.Order;
-import com.kodilla.ecommercee.domain.OrderDto;
+import com.kodilla.ecommercee.domain.*;
 import com.kodilla.ecommercee.mapper.CartMapper;
 import com.kodilla.ecommercee.service.CartService;
 import lombok.RequiredArgsConstructor;
@@ -44,7 +41,7 @@ public class CartController {
     @PostMapping("{cartId}/checkout")
     public ResponseEntity<OrderDto> checkoutCart(@PathVariable long cartId) {
         Order order = cartService.cartCheckout(cartId);
-        return ResponseEntity.ok(new OrderDto(order.getId(), order.getOrderDate(), order.getUser().getId(), order.getTotalPrice(), order.getProducts()));
+        return ResponseEntity.ok(new OrderDto(order.getId(), order.getOrderDate(), order.getUser().getId(), order.getTotalPrice(), order.getProducts().stream().map(Product::getId).toList()));
     }
 
 }
