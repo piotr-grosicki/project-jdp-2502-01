@@ -22,7 +22,7 @@ public class Group {
     @Column(name = "GROUP_NAME", nullable = false, length = 100)
     private String name;
 
-    @OneToMany(mappedBy = "group", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "group", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Product> products = new ArrayList<>();
 
     @Override

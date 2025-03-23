@@ -128,14 +128,14 @@ public class GroupTestSuite {
 
         groupRepository.save(group);
 
-        System.out.println(groupRepository.findByIdWithProducts(group.getId()));
+        System.out.println(groupRepository.findById(group.getId()));
 
         // Sprawdzam czy produkty zostały dodane do bazy
             List<Product> allProducts = (List<Product>) productRepository.findAll();
             System.out.println("Products in database: " + allProducts.size());
 
         //When
-        Optional<Group> foundGroup = groupRepository.findByIdWithProducts(group.getId());
+        Optional<Group> foundGroup = groupRepository.findById(group.getId());
 
             // Sprawdzam czy produkty zostały przypisane do grupy
             Group retrievedGroup = foundGroup.get();

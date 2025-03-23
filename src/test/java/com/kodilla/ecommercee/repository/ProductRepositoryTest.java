@@ -15,6 +15,8 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -27,36 +29,6 @@ class ProductRepositoryTest {
     @Autowired
     private GroupRepository groupRepository;
 
-    private Product product1;
-    private Product product2;
-    private Product product3;
-    private Group group;
-
-    @BeforeEach
-    void setUp() {
-        // Tworzenie grupy
-        group = new Group();
-        group.setName("Fruits");
-        group = groupRepository.save(group);
-
-        // Tworzenie produktów i przypisanie grupy
-        product1 = new Product();
-        product1.setName("Apple");
-        product1.setDescription("Fresh apple");
-        product1.setPrice(new BigDecimal("1.99"));
-        product1.setGroup(group);
-        product1 = productRepository.save(product1);
-
-        product2 = new Product();
-        product2.setName("Banana");
-        product2.setDescription("Fresh banana");
-        product2.setPrice(new BigDecimal("2.99"));
-        product2.setGroup(group);
-        product2 = productRepository.save(product2);
-
-        group.setProducts(new ArrayList<>(List.of(product1, product2)));
-        groupRepository.save(group);
-    }
     @AfterEach
     void tearDown() {
         productRepository.deleteAll();
@@ -65,18 +37,29 @@ class ProductRepositoryTest {
 
     @Test
     void shouldFindAllProducts() {
+//        GIVEN
+        Group group = new Group(null, "Fruits", new ArrayList<>());
+        groupRepository.save(group);
+        Product product1 = new Product(null, "Apple", "Fresh apple", new BigDecimal("1.99"), null);
+        productRepository.save(product1);
+//        WHEN
+        Long productId = product1.getId();
         List<Product> result = productRepository.findAll();
+//        THEN
         assertNotNull(result);
-        assertEquals(2, result.size());
+        assertEquals(1, result.size());
     }
 
     @Test
     void shouldGetProductById() {
 //        GIVEN
+        Group group = new Group(null, "Fruits", new ArrayList<>());
+        groupRepository.save(group);
+        Product product1 = new Product(null, "Apple", "Fresh apple", new BigDecimal("1.99"), null);
+        productRepository.save(product1);
 //        WHEN
         Optional<Product> result = productRepository.findById(product1.getId());
 //        THEN
-        assertTrue(result.isPresent(), "Product should be found in the database");
         assertEquals("Apple", result.get().getName());
     }
 
@@ -84,33 +67,34 @@ class ProductRepositoryTest {
     @Transactional
     void shouldCreateProduct() {
 //        GIVEN
-        product3 = new Product();
-        product3.setName("Orange");
-        product3.setDescription("Fresh orange");
-        product3.setPrice(new BigDecimal("3.99"));
-        product3.setGroup(group);
-        Long groupId = group.getId();
+        Product product = new Product();
+        product.setName("Orange");
+        product.setDescription("Fresh orange");
+        product.setPrice(new BigDecimal("3.99"));
+        product.setGroup(null);
 //      WHEN
-        Product result = productRepository.save(product3);
-        group.getProducts().add(product3);
-        Long productsInGroup = groupRepository.findById(groupId).get().getProducts().stream().count();
-        groupRepository.save(group);
+        Product result = productRepository.save(product);
 //      THEN
         assertNotNull(result);
         assertEquals("Orange", result.getName());
-        assertEquals(3, productRepository.findAll().size());
-        assertEquals(3, productsInGroup);
+        assertEquals(1, productRepository.findAll().size());
     }
 
     @Test
     void shouldUpdateProduct() {
 //        GIVEN
+        Group group = new Group(null, "Fruits", new ArrayList<>());
+        groupRepository.save(group);
+        Product product1 = new Product(null, "Apple", "Fresh apple", new BigDecimal("1.99"), null);
+        productRepository.save(product1);
 //        WHEN
         product1.setName("Green Apple");
         productRepository.save(product1);
+        int allProducts = productRepository.findAll().size();
         Optional<Product> updatedProduct = productRepository.findById(product1.getId());
 //        THEN
         assertTrue(updatedProduct.isPresent());
+        assertEquals(1,allProducts);
         assertEquals("Green Apple", updatedProduct.get().getName());
     }
 
@@ -118,32 +102,38 @@ class ProductRepositoryTest {
     @Transactional
     void shouldDeleteProduct() {
         // GIVEN
-        List<Product> productsBefore = productRepository.findAll();
-        System.out.println("Before delete: " + productsBefore);
-
-
-        group.getProducts().removeIf(p -> p.getId().equals(product1.getId()));
+        Group group = new Group(null, "Fruits", new ArrayList<>());
         groupRepository.save(group);
+        Product product1 = new Product(null, "Apple", "Fresh apple", new BigDecimal("1.99"), group);
+        productRepository.save(product1);
 
         // WHEN
         productRepository.deleteById(product1.getId());
-
         List<Product> productsAfterDelete = productRepository.findAll();
-        System.out.println("After delete: " + productsAfterDelete);
 
         // Then
-        Assertions.assertEquals(1, productsAfterDelete.size(), "Liczba produktów w bazie powinna wynosić 1");
-        Assertions.assertFalse(productsAfterDelete.stream().anyMatch(p -> p.getId().equals(product1.getId())));
+        Assertions.assertEquals(0, productsAfterDelete.size(), "Liczba produktów w bazie powinna wynosić 0");
+
     }
 
     @Test
-    public void isTestProductsInGroup() {
-//      GIVEN
-//      WHEN
-        Group savedGroup = groupRepository.findByIdWithProducts(group.getId())
-                .orElseThrow(() -> new RuntimeException("Grupa nie została znaleziona"));
-//      THEN
-        assertNotNull(savedGroup.getProducts(), "Lista produktów nie powinna być null!");
-        assertEquals(2, savedGroup.getProducts().size(), "Lista produktów powinna zawierać 2 elementy.");
+    public void shouldSaveProductsInGroup() {
+        // GIVEN
+        Group group = new Group(null, "Fruits", new ArrayList<>());
+        groupRepository.save(group);
+
+        Product product1 = new Product(null, "Apple", "Fresh apple", new BigDecimal("1.99"), group);
+        productRepository.save(product1);
+
+        // WHEN
+        Group savedGroup = groupRepository.findById(group.getId())
+                .orElseThrow(() -> new RuntimeException("Group not found"));
+
+        List<Product> productsInGroup = savedGroup.getProducts();
+
+        // THEN
+        assertNotNull(productsInGroup, "Lista produktów nie powinna być null!");
+        assertEquals(1, productsInGroup.size(), "Lista produktów powinna zawierać 1 element.");
+        assertEquals("Apple", productsInGroup.get(0).getName(), "Nazwa produktu powinna być 'Apple'");
     }
 }
