@@ -1,8 +1,7 @@
-package com.kodilla.ecommercee.repository;
+package com.kodilla.ecommercee.domain;
 
-import com.kodilla.ecommercee.domain.Group;
-import com.kodilla.ecommercee.domain.Product;
-import jakarta.transaction.Transactional;
+import com.kodilla.ecommercee.repository.GroupRepository;
+import com.kodilla.ecommercee.repository.ProductRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,7 +14,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-class ProductRepositoryTest {
+class ProductTestSuite {
 
     @Autowired
     private ProductRepository productRepository;
