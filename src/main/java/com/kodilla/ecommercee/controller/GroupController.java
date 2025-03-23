@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 @RestController
-@RequestMapping("/groups")
+@RequestMapping("/v1/groups")
 @AllArgsConstructor
 public class GroupController {
 
