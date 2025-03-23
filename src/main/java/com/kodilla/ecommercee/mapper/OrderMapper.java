@@ -17,17 +17,11 @@ import java.util.stream.Collectors;
 @Service
 public class OrderMapper {
 
-    @Autowired
-    private final OrderRepository orderRepository;
-
-    @Autowired
     private final UserRepository userRepository;
 
-    @Autowired
     private final ProductRepository productRepository;
 
-    public OrderMapper(OrderRepository orderRepository, UserRepository userRepository, ProductRepository productRepository) {
-        this.orderRepository = orderRepository;
+    public OrderMapper(UserRepository userRepository, ProductRepository productRepository) {
         this.userRepository = userRepository;
         this.productRepository = productRepository;
     }
@@ -35,8 +29,8 @@ public class OrderMapper {
 
     public Order mapToOrder(final OrderDto orderDto) {
         Long userId = orderDto.getUserId();
-        Optional<User> UserById = userRepository.findById(userId);
-        User user = UserById.get();
+        Optional<User> userById = userRepository.findById(userId);
+        User user = userById.get();
         List<Product> productsList = orderDto.getProductsIds().stream()
                 .map(l -> productRepository.findById(l).get())
                 .collect(Collectors.toList());
