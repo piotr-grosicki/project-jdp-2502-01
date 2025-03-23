@@ -38,7 +38,7 @@ public class Group {
         }
 
         if (!products.isEmpty()) {
-            sb.setLength(sb.length() - 2); // usuń ostatni przecinek
+            sb.setLength(sb.length() - 2);
         }
 
         sb.append("]}");

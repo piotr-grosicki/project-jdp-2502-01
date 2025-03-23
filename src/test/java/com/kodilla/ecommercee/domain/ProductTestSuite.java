@@ -1,27 +1,22 @@
-package com.kodilla.ecommercee.repository;
+package com.kodilla.ecommercee.domain;
 
-import com.kodilla.ecommercee.domain.Group;
-import com.kodilla.ecommercee.domain.Product;
+import com.kodilla.ecommercee.repository.GroupRepository;
+import com.kodilla.ecommercee.repository.ProductRepository;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.DirtiesContext;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-class ProductRepositoryTest {
+class ProductTestSuite {
 
     @Autowired
     private ProductRepository productRepository;
@@ -40,14 +35,15 @@ class ProductRepositoryTest {
 //        GIVEN
         Group group = new Group(null, "Fruits", new ArrayList<>());
         groupRepository.save(group);
-        Product product1 = new Product(null, "Apple", "Fresh apple", new BigDecimal("1.99"), null);
+        Product product1 = new Product(null, "Apple", "Fresh apple", new BigDecimal("1.99"), group);
         productRepository.save(product1);
 //        WHEN
         Long productId = product1.getId();
-        List<Product> result = productRepository.findAll();
+        Product result = productRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException("Product not found"));
 //        THEN
         assertNotNull(result);
-        assertEquals(1, result.size());
+        assertEquals("Fresh apple", result.getDescription());
     }
 
     @Test
@@ -55,7 +51,7 @@ class ProductRepositoryTest {
 //        GIVEN
         Group group = new Group(null, "Fruits", new ArrayList<>());
         groupRepository.save(group);
-        Product product1 = new Product(null, "Apple", "Fresh apple", new BigDecimal("1.99"), null);
+        Product product1 = new Product(null, "Apple", "Fresh apple", new BigDecimal("1.99"), group);
         productRepository.save(product1);
 //        WHEN
         Optional<Product> result = productRepository.findById(product1.getId());
@@ -67,17 +63,21 @@ class ProductRepositoryTest {
     @Transactional
     void shouldCreateProduct() {
 //        GIVEN
+        Group group = new Group(null, "Fruits", new ArrayList<>());
+        groupRepository.save(group);
         Product product = new Product();
         product.setName("Orange");
         product.setDescription("Fresh orange");
         product.setPrice(new BigDecimal("3.99"));
-        product.setGroup(null);
+        product.setGroup(group);
+        productRepository.save(product);
 //      WHEN
-        Product result = productRepository.save(product);
+        Long productId = product.getId();
+        Product result = productRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException("Product not found"));
 //      THEN
         assertNotNull(result);
         assertEquals("Orange", result.getName());
-        assertEquals(1, productRepository.findAll().size());
     }
 
     @Test
@@ -85,16 +85,14 @@ class ProductRepositoryTest {
 //        GIVEN
         Group group = new Group(null, "Fruits", new ArrayList<>());
         groupRepository.save(group);
-        Product product1 = new Product(null, "Apple", "Fresh apple", new BigDecimal("1.99"), null);
+        Product product1 = new Product(null, "Apple", "Fresh apple", new BigDecimal("1.99"), group);
         productRepository.save(product1);
 //        WHEN
         product1.setName("Green Apple");
         productRepository.save(product1);
-        int allProducts = productRepository.findAll().size();
         Optional<Product> updatedProduct = productRepository.findById(product1.getId());
 //        THEN
         assertTrue(updatedProduct.isPresent());
-        assertEquals(1,allProducts);
         assertEquals("Green Apple", updatedProduct.get().getName());
     }
 
@@ -109,10 +107,10 @@ class ProductRepositoryTest {
 
         // WHEN
         productRepository.deleteById(product1.getId());
-        List<Product> productsAfterDelete = productRepository.findAll();
+
 
         // Then
-        Assertions.assertEquals(0, productsAfterDelete.size(), "Liczba produktów w bazie powinna wynosić 0");
+        assertFalse(productRepository.findById(product1.getId()).isPresent());
 
     }
 

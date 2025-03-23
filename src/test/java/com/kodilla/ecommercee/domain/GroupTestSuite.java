@@ -2,7 +2,6 @@ package com.kodilla.ecommercee.domain;
 
 import com.kodilla.ecommercee.repository.GroupRepository;
 import com.kodilla.ecommercee.repository.ProductRepository;
-import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -17,8 +16,6 @@ import java.util.Optional;
 
 @SpringBootTest
 public class GroupTestSuite {
-
-
 
     @Autowired
     private GroupRepository groupRepository;
@@ -35,7 +32,7 @@ public class GroupTestSuite {
     @Test
     public void addGroupTest() {
         //Given
-        Group group = new Group(null, "Electronics", new ArrayList<>());
+        Group group = createGroup("Electronics");
 
         //When
         Group savedGroup = groupRepository.save(group);
@@ -48,7 +45,7 @@ public class GroupTestSuite {
     @Test
     public void findGroupByIdTest() {
         //Given
-        Group group = new Group(null, "Electronics", new ArrayList<>());
+        Group group = createGroup("Electronics");
         Group savedGroup = groupRepository.save(group);
 
         //When
@@ -62,8 +59,8 @@ public class GroupTestSuite {
     @Test
     public void findAllGroupsTest() {
         //Given
-        Group group1 = new Group(null , "Electronics", new ArrayList<>());
-        Group group2 = new Group(null, "Clothing", new ArrayList<>());
+        Group group1 = createGroup("Electronics");
+        Group group2 = createGroup("Clothing");
         groupRepository.save(group1);
         groupRepository.save(group2);
 
@@ -77,23 +74,23 @@ public class GroupTestSuite {
     @Test
     public void deleteGroupTest() {
         //Given
-        Group group1 = new Group(null , "Electronics", new ArrayList<>());
-        Group group2 = new Group(null, "Clothing", new ArrayList<>());
+        Group group1 = createGroup("Electronics");
+        Group group2 = createGroup("Clothing");
         groupRepository.save(group1);
         groupRepository.save(group2);
+        Long group2Id = group2.getId();
 
         //When
         groupRepository.delete(group2);
-        List<Group> groups = (List<Group>) groupRepository.findAll();
 
         //Then
-        Assertions.assertEquals(1, groups.size());
+        Assertions.assertFalse(groupRepository.findById(group2Id).isPresent());
     }
 
     @Test
     public void updateGroupTest() {
         //Given
-        Group group = new Group(null , "Electronics", new ArrayList<>());
+        Group group = createGroup("Electronics");
         Group savedGroup = groupRepository.save(group);
         Long id = savedGroup.getId();
 
@@ -112,37 +109,19 @@ public class GroupTestSuite {
     }
 
     @Test
-    @Transactional
     public void findProductListAssignedToGroupTest() {
         //Given
-        Group group = new Group(1L , "Electronics", new ArrayList<>());
+        Group group = createGroup("Electronics");
         groupRepository.save(group);
 
-        Product product1 = new Product(1L, "LED TV", "Very big LED TV", new BigDecimal("6999"), group);
-        Product product2 = new Product(2L, "Soundbar", "Very laud soundbar", new BigDecimal("3999"), group);
+        Product product1 = createProduct("LED TV", "Very big LED TV", new BigDecimal("6999"), group);
+        Product product2 = createProduct("Soundbar", "Very laud soundbar", new BigDecimal("3999"), group);
         productRepository.save(product1);
         productRepository.save(product2);
 
-        group.getProducts().add(product1);
-        group.getProducts().add(product2);
-
-        groupRepository.save(group);
-
-        System.out.println(groupRepository.findById(group.getId()));
-
-        // Sprawdzam czy produkty zostały dodane do bazy
-            List<Product> allProducts = (List<Product>) productRepository.findAll();
-            System.out.println("Products in database: " + allProducts.size());
-
         //When
         Optional<Group> foundGroup = groupRepository.findById(group.getId());
-
-            // Sprawdzam czy produkty zostały przypisane do grupy
-            Group retrievedGroup = foundGroup.get();
-            System.out.println("Group ID: " + retrievedGroup.getId());
-            System.out.println("Products in group: " + retrievedGroup.getProducts());
-            System.out.println("Retrieved Products: " + retrievedGroup.getProducts().size());
-            retrievedGroup.getProducts().forEach(p -> System.out.println("Product: " + p.getName()));
+        Group retrievedGroup = foundGroup.get();
 
         //Then
         Assertions.assertTrue(foundGroup.isPresent());
@@ -152,55 +131,31 @@ public class GroupTestSuite {
 
     }
 
-//    @Test
-//    @Transactional
-//    public void deleteGroupWithProductTest() {
-//        //Given
-//        Group group = new Group(1L , "Electronics", new ArrayList<>());
-//        Group savedGroup = groupRepository.save(group);
-//
-//        Product product1 = new Product(1L, "LED TV", "Very big LED TV", new BigDecimal("6999"), group);
-//        Product product2 = new Product(2L, "Soundbar", "Very laud soundbar", new BigDecimal("3999"), group);
-//        productRepository.save(product1);
-//        productRepository.save(product2);
-//        System.out.println(groupRepository.findByIdWithProducts(group.getId()));
-//
-//            // Sprawdzam czy produkty zostały przypisane do grupy
-//            Optional<Group> foundGroup = groupRepository.findById(savedGroup.getId());
-//            Group retrievedGroup = foundGroup.get();
-//            System.out.println("Group ID: " + retrievedGroup.getId());
-//            System.out.println("Products in group: " + retrievedGroup.getProducts());
-//            System.out.println("Retrieved Products: " + retrievedGroup.getProducts().size());
-//            retrievedGroup.getProducts().forEach(p -> System.out.println("Product: " + p.getName()));
-//
-//        //When & Then
-//        Exception exception = Assertions.assertThrows(DataIntegrityViolationException.class, () -> {groupRepository.delete(savedGroup);});
-//        System.out.println(exception.getMessage());
-//        Assertions.assertTrue(foundGroup.isPresent());
-//    }
-
-
     @Test
-    @Transactional
     public void deleteGroupWithProductTest() {
         //Given
-        Group group = new Group(null , "Electronics", new ArrayList<>());
-        groupRepository.save(group);
+        Group group = createGroup("Electronics");
+        Group savedGroup = groupRepository.save(group);
 
-        Product product1 = new Product(null, "LED TV", "Very big LED TV", new BigDecimal("6999"), group);
-        Product product2 = new Product(null, "Soundbar", "Very laud soundbar", new BigDecimal("3999"), group);
+        Product product1 = createProduct("LED TV", "Very big LED TV", new BigDecimal("6999"), group);
+        Product product2 = createProduct("Soundbar", "Very laud soundbar", new BigDecimal("3999"), group);
         productRepository.save(product1);
         productRepository.save(product2);
 
-        group.getProducts().add(product1);
-        group.getProducts().add(product2);
-        groupRepository.save(group);
+        //When & Then
+        Exception exception = Assertions.assertThrows(DataIntegrityViolationException.class, () -> {
+            groupRepository.delete(savedGroup);
+        });
+        Assertions.assertTrue(groupRepository.findById(group.getId()).isPresent());
+        Assertions.assertTrue(productRepository.findById(product1.getId()).isPresent());
+        Assertions.assertTrue(productRepository.findById(product2.getId()).isPresent());
+    }
 
-        //When
-        groupRepository.deleteById(group.getId());
+    public static Group createGroup(String name) {
+        return new Group(null, name, new ArrayList<>());
+    }
 
-        //Then
-        Assertions.assertFalse(groupRepository.findById(group.getId()).isPresent());
-        Assertions.assertEquals(0, productRepository.findAll().size());
+    public static Product createProduct(String name, String description, BigDecimal price, Group group) {
+        return new Product(null, name, description, price, group);
     }
 }
