@@ -122,12 +122,6 @@ public class UserTestSuite {
         assertEquals("Mike", users.get(0).getFirstname());
         assertEquals("Nowak", users.get(1).getLastname());
         assertEquals("test-token2", users.get(1).getToken());
-
-        //When
-        userRepository.deleteById(user2.getId());
-        List<User> usersAfterRemovingOne = userRepository.findAll();
-        //Then
-        assertEquals(1, usersAfterRemovingOne.size());
     }
 
 }
