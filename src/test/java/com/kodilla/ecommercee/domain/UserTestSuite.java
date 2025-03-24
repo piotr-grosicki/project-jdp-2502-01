@@ -2,6 +2,7 @@ package com.kodilla.ecommercee.domain;
 
 import com.kodilla.ecommercee.repository.UserRepository;
 import jakarta.transaction.Transactional;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,8 @@ public class UserTestSuite {
 
     @BeforeEach
     void setUp() {
+        userRepository.deleteAll();
+
         user = new User();
         user.setFirstname("Mike");
         user.setLastname("Kowalski");
@@ -40,6 +43,11 @@ public class UserTestSuite {
         cart.setUser(user);
         cart.setProducts(new ArrayList<>());
         user.setCart(cart);
+    }
+
+    @AfterEach
+    public void cleanUp() {
+        userRepository.deleteAll();
     }
 
     @Test
