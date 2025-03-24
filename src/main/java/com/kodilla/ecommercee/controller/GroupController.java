@@ -1,43 +1,37 @@
 package com.kodilla.ecommercee.controller;
 
 import com.kodilla.ecommercee.domain.GroupDto;
+import com.kodilla.ecommercee.service.GroupService;
 import lombok.AllArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
 @RestController
-@RequestMapping("/groups")
+@RequestMapping("/v1/groups")
 @AllArgsConstructor
 public class GroupController {
 
+    private final GroupService groupService;
 
     @GetMapping
     public ResponseEntity<List<GroupDto>> getAllGroups() {
-        List<GroupDto> groups = List.of(
-                new GroupDto(1L, "Electronics", List.of()),
-                new GroupDto(2L, "Books",List.of(1L, 2L)),
-                new GroupDto(3L, "Clothing",List.of())
-        );
-        return ResponseEntity.ok(groups);
-    }
-
-    @PostMapping
-    public ResponseEntity<GroupDto> addGroup(@RequestBody GroupDto groupDto) {
-        GroupDto createdGroup = new GroupDto(4L, "Alkohol",List.of());
-        return ResponseEntity.ok(createdGroup);
+        return ResponseEntity.ok(groupService.getAllGroups());
     }
 
     @GetMapping("/{groupId}")
-    public ResponseEntity<GroupDto> getGroupById(@PathVariable Long groupId)  {
-        GroupDto group = new GroupDto(groupId, "Example Group " + groupId, List.of());
-        return ResponseEntity.ok(group);
+    public ResponseEntity<GroupDto> getGroupById(@PathVariable Long groupId) throws GroupNotFoundException {
+        return ResponseEntity.ok(groupService.getGroupById(groupId));
+    }
+
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<GroupDto> createGroup(@RequestBody GroupDto request) {
+        return ResponseEntity.ok(groupService.createGroup(request));
     }
 
     @PutMapping("/{groupId}")
-    public ResponseEntity<GroupDto> updateGroupName(@PathVariable Long groupId, @RequestBody String newName)  {
-        GroupDto updatedGroup = new GroupDto(groupId, newName, List.of());
-        return ResponseEntity.ok(updatedGroup);
+    public ResponseEntity<GroupDto> updateGroupName(@PathVariable Long groupId, @RequestBody GroupDto dto) throws GroupNotFoundException {
+        return ResponseEntity.ok(groupService.updateGroupName(groupId, dto));
     }
 }
