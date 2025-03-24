@@ -30,7 +30,7 @@ public class Order {
     private LocalDate orderDate;
 
     @ManyToOne
-    @JoinColumn(name = "USER_ID", nullable = false)
+    @JoinColumn(name = "USER_ID", referencedColumnName = "USER_ID", nullable = false)
     private User user;
 
     @Column(name = "TOTAL_PRICE", nullable = false)

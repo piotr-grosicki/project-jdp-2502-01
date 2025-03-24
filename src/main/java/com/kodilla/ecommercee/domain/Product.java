@@ -40,4 +40,5 @@ public class Product {
     @JoinColumn(name = "GROUP_ID", nullable = false)
     @JsonIgnore
     private Group group;
+
 }
