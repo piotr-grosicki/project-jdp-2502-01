@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -36,5 +37,5 @@ public class Cart {
             joinColumns = @JoinColumn(name = "CART_ID"),
             inverseJoinColumns = @JoinColumn(name = "PRODUCT_ID")
     )
-    private List<Product> products;
+    private List<Product> products = new ArrayList<>();
 }
