@@ -14,6 +14,10 @@ import java.util.List;
 @AllArgsConstructor
 public class Group {
 
+    public Group(String name) {
+        this.name = name;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "GROUP_ID")

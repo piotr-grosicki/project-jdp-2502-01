@@ -15,6 +15,13 @@ import java.math.BigDecimal;
 @Table(name = "PRODUCTS")
 public class Product {
 
+    public Product(String name, String description, BigDecimal price, Group group) {
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.group = group;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "PRODUCT_ID")
