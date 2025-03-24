@@ -31,7 +31,7 @@ public class OrderMapper {
         Long userId = orderDto.getUserId();
         Optional<User> userById = userRepository.findById(userId);
         User user = userById.get();
-        List<Product> productsList = orderDto.getProductsIds().stream()
+        List<Product> productsList = orderDto.getProductsIdList().stream()
                 .map(l -> productRepository.findById(l).get())
                 .collect(Collectors.toList());
 
