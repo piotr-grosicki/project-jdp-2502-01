@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @NoArgsConstructor
@@ -19,8 +20,7 @@ public class UserDto {
     private String address;
     private boolean blocked;
     private String token;
-    private LocalDate dateOfExpiry;
-//    private CartDto cart;
-    private List<Long> ordersId;
-
+    private LocalDateTime expiresAt;
+    private List<Order> orders;
+    private Cart cart;
 }
