@@ -7,13 +7,19 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
-@Entity(name = "orders")
+@Entity
 @Table(name = "ORDERS")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class Order {
+
+    public Order(LocalDate orderDate, User user, BigDecimal totalPrice) {
+        this.orderDate = orderDate;
+        this.user = user;
+        this.totalPrice = totalPrice;
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
