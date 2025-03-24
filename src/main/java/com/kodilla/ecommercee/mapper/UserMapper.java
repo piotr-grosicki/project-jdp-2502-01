@@ -4,6 +4,7 @@ import com.kodilla.ecommercee.domain.User;
 import com.kodilla.ecommercee.domain.UserDto;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -19,8 +20,8 @@ public class UserMapper {
                 userDto.isBlocked(),
                 userDto.getToken(),
                 userDto.getExpiresAt(),
-                userDto.getOrders(),
-                userDto.getCart()
+                new ArrayList<>(),
+                null
         );
     }
 
@@ -33,9 +34,7 @@ public class UserMapper {
                 user.getAddress(),
                 user.isBlocked(),
                 user.getToken(),
-                user.getExpiresAt(),
-                user.getOrders(),
-                user.getCart()
+                user.getExpiresAt()
         );
     }
 
