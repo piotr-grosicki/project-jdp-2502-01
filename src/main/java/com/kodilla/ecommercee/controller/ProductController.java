@@ -1,60 +1,96 @@
 package com.kodilla.ecommercee.controller;
 
+import com.kodilla.ecommercee.domain.Product;
 import com.kodilla.ecommercee.domain.ProductDto;
+import com.kodilla.ecommercee.mapper.ProductMapper;
+import com.kodilla.ecommercee.service.ProductService;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/product")
+@RequestMapping("/v1/product")
 @AllArgsConstructor
 public class ProductController {
 
+    private final ProductService service;
+    private final ProductMapper mapper;
+
+
+
     @GetMapping
     public ResponseEntity<List<ProductDto>> getAllProducts() {
-        List<ProductDto> products = List.of(
-                new ProductDto(1L, "Earbuds", "Highest tech new NC earbuds", 8.99),
-                new ProductDto(2L, "T-shirt", "Regular plain t-shirt", 20.99),
-                new ProductDto(3L, "History Book part 1", "101 of ancients", 5.56),
-                new ProductDto(4L, "Jack Daniels 0.7", "0.7 of good ol' Jack", 4.23)
-        );
-        return ResponseEntity.ok(products);
+        List<Product> products = service.getAllProducts();
+        if (products == null) {
+            return ResponseEntity.ok(List.of());
+        }
+        return ResponseEntity.ok(mapper.mapToProductDtoList(products));
     }
 
-    @GetMapping("/{productId}")
-    public ResponseEntity<ProductDto> getProductById(Long id) {
-        ProductDto product = new ProductDto(1L, "Test product", "Test description", 10.00);
-        return ResponseEntity.ok(product);
+    @GetMapping(value = "/{productId}")
+    public ResponseEntity<ProductDto> getProductById(@PathVariable Long productId) {
+        Product product = service.getProductById(productId);
+        if (product == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        return ResponseEntity.ok(mapper.mapToProductDto(product));
     }
 
-    @PostMapping
-    public void addProduct() {
-        ProductDto productAdded = new ProductDto(6L, "New test product added", "New test description added", 3.99);
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ProductDto> addProduct(@RequestBody ProductDto productDto) {
+        Product product = mapper.mapToProduct(productDto);
+        Product addedProduct = service.addProduct(product);
+        return ResponseEntity.status(HttpStatus.CREATED).body(mapper.mapToProductDto(addedProduct));
     }
 
     @DeleteMapping(value = "/{productId}")
-    public void deleteProduct() {
-
+    public ResponseEntity<Void> deleteProduct(@PathVariable Long productId) {
+        Product product = service.getProductById(productId);
+        if (product == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        service.removeProduct(productId);
+        return ResponseEntity.noContent().build();
     }
 
-    @PutMapping(value = "/{productId}/name")
-    public ResponseEntity<ProductDto> updateProductName(@RequestBody ProductDto productDto) {
-        ProductDto productUpdatedName = new ProductDto(1L, "Test product updated", "Test description", 10.00);
-        return ResponseEntity.ok(productUpdatedName);
+    @PutMapping("/{productId}/name")
+    public ResponseEntity<ProductDto> updateProductName(
+            @PathVariable Long productId, @RequestBody ProductDto productDto) {
+        Product existingProduct = service.getProductById(productId);
+        if (existingProduct == null) {
+            return ResponseEntity.notFound().build();
+        }
+        existingProduct.setName(productDto.getName());
+        Product updatedProduct = service.updateProduct(existingProduct);
+        return ResponseEntity.ok(mapper.mapToProductDto(updatedProduct));
     }
 
-    @PutMapping(value = "/{productId}/description")
-    public ResponseEntity<ProductDto> updateProductDescription(@RequestBody ProductDto productDto) {
-        ProductDto productUpdatedDescription = new ProductDto(1L, "Test product", "Test description updated", 10.00);
-        return ResponseEntity.ok(productUpdatedDescription);
+    @PutMapping("/{productId}/description")
+    public ResponseEntity<ProductDto> updateProductDescription(
+            @PathVariable Long productId, @RequestBody ProductDto productDto) {
+        Product existingProduct = service.getProductById(productId);
+        if (existingProduct == null) {
+            return ResponseEntity.notFound().build();
+        }
+        existingProduct.setDescription(productDto.getDescription());
+        Product updatedProduct = service.updateProduct(existingProduct);
+        return ResponseEntity.ok(mapper.mapToProductDto(updatedProduct));
     }
 
-    @PutMapping(value = "/{productId}/price")
-    public ResponseEntity<ProductDto> updateProductPrice(@RequestBody ProductDto productDto) {
-        ProductDto productUpdatedPrice = new ProductDto(1L, "Test product", "Test description", 12.50);
-        return ResponseEntity.ok(productUpdatedPrice);
-
+    @PutMapping("/{productId}/price")
+    public ResponseEntity<ProductDto> updateProductPrice(
+            @PathVariable Long productId, @RequestBody ProductDto productDto) {
+        Product existingProduct = service.getProductById(productId);
+        if (existingProduct == null) {
+            return ResponseEntity.notFound().build();
+        }
+        existingProduct.setPrice(productDto.getPrice());
+        Product updatedProduct = service.updateProduct(existingProduct);
+        return ResponseEntity.ok(mapper.mapToProductDto(updatedProduct));
     }
+
 }
