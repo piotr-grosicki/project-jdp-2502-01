@@ -1,41 +1,47 @@
 package com.kodilla.ecommercee.controller;
 
-import com.kodilla.ecommercee.domain.CartDto;
+import com.kodilla.ecommercee.domain.*;
+import com.kodilla.ecommercee.mapper.CartMapper;
+import com.kodilla.ecommercee.service.CartService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 @RestController
 @RequestMapping("/v1/carts")
 @RequiredArgsConstructor
 public class CartController {
+    private final CartService cartService;
+    private final CartMapper cartMapper;
 
     @PostMapping("/{userId}")
-    public CartDto createCart(@PathVariable long userId) {
-        return new CartDto(1L, userId, new ArrayList<>());
+    public ResponseEntity<CartDto> createCart(@PathVariable long userId) {
+        Cart cart = cartService.createCart(userId);
+        return ResponseEntity.ok(cartMapper.mapToCartDto(cart));
     }
 
     @GetMapping("/{cartId}")
-    public CartDto getCart(@PathVariable long cartId) {
-        return new CartDto(cartId,2L, Arrays.asList(1L, 2L, 3L));
+    public ResponseEntity<CartDto> getCart(@PathVariable long cartId) {
+        Cart cart = cartService.getCart(cartId);
+        return ResponseEntity.ok(cartMapper.mapToCartDto(cart));
     }
 
     @PostMapping("/{cartId}/products/{productId}")
-    public CartDto addProductToCart(@PathVariable long cartId, @PathVariable long productId) {
-        return new CartDto(cartId, 2L, List.of(productId));
+    public ResponseEntity<CartDto> addProductToCart(@PathVariable long cartId, @PathVariable long productId) {
+        Cart cart = cartService.addProduct(cartId, productId);
+        return ResponseEntity.ok(cartMapper.mapToCartDto(cart));
     }
 
     @DeleteMapping("/{cartId}/products/{productId}")
-    public String removeProductFromCart(@PathVariable long cartId, @PathVariable long productId) {
-        return "The product " + productId + " has been removed from the cart.";
+    public ResponseEntity<CartDto> removeProductFromCart(@PathVariable long cartId, @PathVariable long productId) {
+        Cart cart = cartService.removeProduct(cartId, productId);
+        return ResponseEntity.ok(cartMapper.mapToCartDto(cart));
     }
 
     @PostMapping("{cartId}/checkout")
-    public String checkoutCart(@PathVariable long cartId) {
-        return "A new order has been created.";
+    public ResponseEntity<OrderDto> checkoutCart(@PathVariable long cartId) {
+        Order order = cartService.cartCheckout(cartId);
+        return ResponseEntity.ok(new OrderDto(order.getId(), order.getOrderDate(), order.getUser().getId(), order.getTotalPrice(), order.getProducts().stream().map(Product::getId).toList()));
     }
 
 }
